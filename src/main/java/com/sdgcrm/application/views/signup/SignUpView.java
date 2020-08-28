@@ -42,6 +42,7 @@ import java.util.Set;
 
 @Route("signup")
 @CssImport("./styles/shared-styles.css")
+@Viewport(AppConst.VIEWPORT)
 public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
 
     private Checkbox allowMarketingBox;
@@ -129,7 +130,7 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
 
         Button loginButton = new Button("Already Signed Up");
         Anchor signIn = new Anchor("/", "Already Signed Up? Login");
-        signIn.add("centered-content ");
+        signIn.add("centered-content");
 
         submitButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
@@ -166,7 +167,6 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
 
         successMessage.getStyle().set("color", "var(--lumo-success-text-color)");
         successMessage.getStyle().set("padding", "15px 0");
-
 
         // Add the form to the page
         add(formLayout);

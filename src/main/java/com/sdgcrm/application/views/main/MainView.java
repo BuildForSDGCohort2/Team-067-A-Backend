@@ -30,7 +30,7 @@ import com.sdgcrm.application.views.about.AboutView;
 /**
  * The main view is a top-level placeholder for other views.
  */
-@JsModule("./styles/shared-styles.js")
+
 @PWA(name = "SDGCRM", shortName = "SDGCRM",  enableInstallPrompt = false)
 @Theme(value = Lumo.class, variant = Lumo.DARK)
 @CssImport("./styles/views/main/main-view.css")

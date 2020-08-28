@@ -19,13 +19,14 @@ import com.vaadin.flow.router.Route;
 @Route("login")
 @CssImport("./styles/shared-styles.css")
 @Viewport(AppConst.VIEWPORT)
-@CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
     private LoginForm login = new LoginForm();
 
     public LoginView(){
         addClassName("login-view");
+
+
 
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
@@ -40,6 +41,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
         registerbtn.addClickListener(e -> {
             UI.getCurrent().navigate(SignUpView.class);
         });
+
         add(registerbtn);
     }
 
