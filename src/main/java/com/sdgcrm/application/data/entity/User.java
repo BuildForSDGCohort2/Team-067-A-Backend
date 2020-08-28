@@ -1,5 +1,6 @@
 package com.sdgcrm.application.data.entity;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -11,23 +12,28 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {
-            "username"
-        }),
+
         @UniqueConstraint(columnNames = {
             "email"
         })
 })
 public class User{
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy= GenerationType.AUTO,
+            generator="native"
+    )
+    @GenericGenerator(
+            name = "native",
+            strategy = "native"
+    )
     private Long id;
 
     @NotBlank
-    private String name;
+    private String firstname;
 
     @NotBlank
-    private String username;
+    private String lastname;
 
     @NaturalId
     @NotBlank
@@ -37,21 +43,20 @@ public class User{
     
     private long phone;
 
+    private String location;
+
     private String theme= "dark";
 
-    
+    private String companyName;
+
+    private int active;
     
     
     @NotBlank
-    private String location;
+    private String companyPosition;
 
 
 
-    private double lpgWeight;
-    private String lpgType;
-    private double lpgLevel;
-    
-    
     
 
     @NotBlank
@@ -66,16 +71,18 @@ public class User{
 
     public User() {}
 
-    public User(String name, String username, String email, String password, String location, double lpgLevel,
-    		double lpgWeight, String lpgType) {
-        this.name = name;
-        this.username = username;
+    public User(@NotBlank String firstname, @NotBlank String lastname, @NotBlank @Email String email, long phone, String location,
+                String companyName, @NotBlank String companyPosition, @NotBlank @Size(min = 6, max = 100) String password, Set<Role> roles) {
+
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.email = email;
-        this.password = password;
+        this.phone = phone;
         this.location = location;
-        this.lpgWeight=lpgWeight;
-        this.lpgType=lpgType;
-        this.lpgLevel=lpgLevel;
+        this.companyName = companyName;
+        this.companyPosition = companyPosition;
+        this.password = password;
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -86,21 +93,7 @@ public class User{
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
-    }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getEmail() {
         return email;
@@ -128,37 +121,6 @@ public class User{
 
 	
 
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	public double getLpgWeight() {
-		return lpgWeight;
-	}
-
-	public void setLpgWeight(double lpgWeight) {
-		this.lpgWeight = lpgWeight;
-	}
-
-	public String getLpgType() {
-		return lpgType;
-	}
-
-	public void setLpgType(String lpgType) {
-		this.lpgType = lpgType;
-	}
-
-	public double getLpgLevel() {
-		return lpgLevel;
-	}
-
-	public void setLpgLevel(double lpgLevel) {
-		this.lpgLevel = lpgLevel;
-	}
 
     public long getPhone() {
         return phone;
@@ -174,5 +136,53 @@ public class User{
 
     public void setTheme(String theme) {
         this.theme = theme;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public String getCompanyPosition() {
+        return companyPosition;
+    }
+
+    public void setCompanyPosition(String companyPosition) {
+        this.companyPosition = companyPosition;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
     }
 }

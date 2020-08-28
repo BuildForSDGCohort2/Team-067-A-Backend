@@ -19,25 +19,25 @@ public class DataGenerator {
     @Bean
     public CommandLineRunner loadData(PersonRepository personRepository) {
         return args -> {
-            Logger logger = LoggerFactory.getLogger(getClass());
-            if (personRepository.count() != 0L) {
-                logger.info("Using existing database");
-                return;
-            }
-            long seed = 123L;
-
-            logger.info("Generating demo data");
-
-            logger.info("... generating 100 Person entities...");
-            ExampleDataGenerator<Person> personRepositoryGenerator = new ExampleDataGenerator<>(Person.class, seed);
-            personRepositoryGenerator.setData(Person::setFirstName, DataType.FIRST_NAME);
-            personRepositoryGenerator.setData(Person::setLastName, DataType.LAST_NAME);
-            personRepositoryGenerator.setData(Person::setEmail, DataType.EMAIL);
-            personRepository.saveAll(personRepositoryGenerator.create(100));
-
-
-
-            logger.info("Generated demo data");
+//            Logger logger = LoggerFactory.getLogger(getClass());
+//            if (personRepository.count() != 0L) {
+//                logger.info("Using existing database");
+//                return;
+//            }
+//            long seed = 123L;
+//
+//            logger.info("Generating demo data");
+//
+//            logger.info("... generating 100 Person entities...");
+//            ExampleDataGenerator<Person> personRepositoryGenerator = new ExampleDataGenerator<>(Person.class, seed);
+//            personRepositoryGenerator.setData(Person::setFirstName, DataType.FIRST_NAME);
+//            personRepositoryGenerator.setData(Person::setLastName, DataType.LAST_NAME);
+//            personRepositoryGenerator.setData(Person::setEmail, DataType.EMAIL);
+//            personRepository.saveAll(personRepositoryGenerator.create(100));
+//
+//
+//
+//            logger.info("Generated demo data");
         };
     }
 

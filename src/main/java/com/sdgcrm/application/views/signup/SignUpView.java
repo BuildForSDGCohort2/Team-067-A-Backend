@@ -1,11 +1,18 @@
 package com.sdgcrm.application.views.signup;
 
+import com.sdgcrm.application.data.entity.Role;
+import com.sdgcrm.application.data.entity.RoleName;
+import com.sdgcrm.application.data.entity.User;
+import com.sdgcrm.application.data.service.UserService;
+import com.sdgcrm.application.repository.RoleRepository;
 import com.sdgcrm.application.views.AppConst;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
@@ -15,16 +22,26 @@ import com.vaadin.flow.component.page.Viewport;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.data.binder.ValueContext;
+import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.EmailValidator;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
 @Route("signup")
 @CssImport("./styles/shared-styles.css")
-@Viewport(AppConst.VIEWPORT)
 public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
 
     private Checkbox allowMarketingBox;
@@ -32,6 +49,16 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
     private PasswordField passwordField2;
 
 
+    Binder<User> binder = new Binder<>();
+
+    @Autowired
+    UserService userservice;
+
+    @Autowired
+    RoleRepository roleRepository;
+
+    @Autowired
+    PasswordEncoder encoder;
 
     /**
      * Flag for disabling first run for password validation
@@ -41,45 +68,80 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
     /**
      * We use Spring to inject the backend into our view
      */
-    public SignUpView() {
+    public SignUpView(UserService userservice, RoleRepository roleRepository, PasswordEncoder encoder) {
 
+        this.userservice= userservice;
+        this.roleRepository= roleRepository;
+        this.encoder= encoder;
         /*
          * Create the components we'll need
          */
 
         H2 title = new H2("Signup form");
 
+
         TextField firstnameField = new TextField("First name");
+        binder.forField(firstnameField).asRequired().bind(User::getFirstname,User::setFirstname);
+
+
+
+
         TextField lastnameField = new TextField("Last name");
-        TextField handleField = new TextField("User handle");
+        binder.forField(lastnameField).asRequired().bind(User::getLastname,User::setLastname);
+
+
+        EmailField emailField = new EmailField("Email");
+        binder.forField(emailField).asRequired().bind(User::getEmail,User::setEmail);
+
+
+        TextField companyNameField = new TextField("Company Name");
+        binder.forField(companyNameField).asRequired().bind(User::getCompanyName,User::setCompanyName);
+
+        ComboBox<String> companyPositionField = new ComboBox<>("Company Position");
+        binder.forField(companyPositionField).bind(User::getCompanyPosition,User::setCompanyPosition);
+        companyPositionField.setAllowCustomValue(false);
+
+        TextField locationField = new TextField("Location");
+        binder.forField(locationField).asRequired().bind(User::getLocation,User::setLocation);
+
+        TextField phoneField = new TextField("Phone");
+        binder.forField(phoneField).asRequired("Please Enter Phone Number").withConverter(new StringToLongConverter("Invalid Phone Number")).bind(User::getPhone,User::setPhone);
 
         // This is a custom field we create to handle the field 'avatar' in our data. It
         // work just as any other field, e.g. the TextFields above. Instead of a String
         // value, it has an AvatarImage value.
 
         // We'll need these fields later on so let's store them as class variables
-        allowMarketingBox = new Checkbox("Allow Marketing?");
+        allowMarketingBox = new Checkbox("Accept Terms and Conditions");
         allowMarketingBox.getStyle().set("padding-top", "10px");
-        EmailField emailField = new EmailField("Email");
-        emailField.setVisible(false);
+
+
+        emailField.setVisible(true);
 
         passwordField1 = new PasswordField("Wanted password");
-        passwordField2 = new PasswordField("Password again");
+        passwordField2 = new PasswordField("Confirm password");
+
+        binder.forField(passwordField2).bind(User::getPassword,User::setPassword);
 
         Span errorMessage = new Span();
+        Span successMessage = new Span();
+        Button submitButton = new Button("Sign Up");
 
-        Button submitButton = new Button("Join the community");
+        Button loginButton = new Button("Already Signed Up");
+        Anchor signIn = new Anchor("/", "Already Signed Up? Login");
+        signIn.add("centered-content ");
+
         submitButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         /*
          * Build the visible layout
          */
-
+        companyPositionField.setItems(userservice.getCompanyPosition());
         // Create a FormLayout with all our components. The FormLayout doesn't have any
         // logic (validation, etc.), but it allows us to configure Responsiveness from
         // Java code and its defaults looks nicer than just using a VerticalLayout.
-        FormLayout formLayout = new FormLayout(title, firstnameField, lastnameField, handleField, passwordField1, passwordField2,
-                allowMarketingBox, emailField, errorMessage, submitButton);
+        FormLayout formLayout = new FormLayout(title,successMessage, firstnameField, lastnameField, companyNameField, companyPositionField, passwordField1, passwordField2,
+                 emailField, phoneField,locationField, allowMarketingBox, errorMessage, submitButton, signIn);
 
         // Restrict maximum width and center on page
         formLayout.setMaxWidth("500px");
@@ -95,10 +157,16 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
         formLayout.setColspan(title, 2);
         formLayout.setColspan(errorMessage, 2);
         formLayout.setColspan(submitButton, 2);
+        formLayout.setColspan(successMessage, 2);
+        formLayout.setColspan(signIn, 2);
 
         // Add some styles to the error message to make it pop out
         errorMessage.getStyle().set("color", "var(--lumo-error-text-color)");
         errorMessage.getStyle().set("padding", "15px 0");
+
+        successMessage.getStyle().set("color", "var(--lumo-success-text-color)");
+        successMessage.getStyle().set("padding", "15px 0");
+
 
         // Add the form to the page
         add(formLayout);
@@ -108,31 +176,102 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
 
 
 
-        // Only ask for email address if the user wants marketing emails
-        allowMarketingBox.addValueChangeListener(e -> {
+//        // Only ask for email address if the user wants marketing emails
+//        allowMarketingBox.addValueChangeListener(e -> {
+//
+//            // show or hide depending on the checkbox
+//            emailField.setVisible(allowMarketingBox.getValue());
+//
+//            // Additionally, remove the input if the user decides not to allow emails. This
+//            // way any input that ends up hidden on the page won't end up in the bean when
+//            // saved.
+//            if (!allowMarketingBox.getValue()) {
+//                emailField.setValue("");
+//            }
+//        });
 
-            // show or hide depending on the checkbox
-            emailField.setVisible(allowMarketingBox.getValue());
+        passwordField2.addValueChangeListener(e -> {
+             enablePasswordValidation = true;
+            });
 
-            // Additionally, remove the input if the user decides not to allow emails. This
-            // way any input that ends up hidden on the page won't end up in the bean when
-            // saved.
-            if (!allowMarketingBox.getValue()) {
-                emailField.setValue("");
+
+        submitButton.addClickListener(e -> {
+
+            // Creating user's account
+
+            if ( binder.validate().hasErrors()) {
+                Notification.show("Validation error count: "
+                        + binder.validate().getFieldValidationStatuses().toString());
+
+                errorMessage.setText("you have "+binder.validate().getValidationErrors().size() +" errors");
+            }else{
+
+
+
+                String strRoles = "user";
+                Set<Role> roles = new HashSet<>();
+
+
+                switch(strRoles) {
+                    case "admin":
+                        Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
+                                .orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
+                        roles.add(adminRole);
+
+                        break;
+                    case "pm":
+                        Role pmRole = roleRepository.findByName(RoleName.ROLE_PM)
+                                .orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
+                        roles.add(pmRole);
+
+                        break;
+                    default:
+                        Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
+                                .orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
+                        roles.add(userRole);
+                }
+                User user = new User();
+
+                user.setFirstname(firstnameField.getValue());
+                user.setLastname(lastnameField.getValue());
+                user.setEmail(emailField.getValue());
+                user.setPhone( Long.parseLong(phoneField.getValue()));
+                user.setLocation(locationField.getValue());
+                user.setCompanyName(companyNameField.getValue());
+                user.setCompanyPosition(companyPositionField.getValue());
+                user.setPassword( encoder.encode(passwordField2.getValue()));
+                user.setRoles(roles);
+
+                System.out.println(user.toString());
+                userservice.store(user);
+
+                successMessage.setText("<br/> Thank you %s, your registration was submitted! please check your email to confirm account "+ emailField.getValue() +" or contact support");
+
+                String msg = String.format(
+                        "Thank you %s, your registration was submitted! please check your email to confirm account",
+                        emailField.getValue());
+
+
+                Notification.show(msg, 3000, Notification.Position.MIDDLE);
+                init();
+
             }
+
+
+
+
+
+
         });
 
-      passwordField2.addValueChangeListener(e -> {
-
-            // The user has modified the second field, now we can validate and show errors.
-            // See passwordValidator() for how this flag is used.
-            enablePasswordValidation = true;
-
-        });
 
 
 
+    }
 
+
+    private void init() {
+        binder.setBean(new User());
     }
 
     /**
