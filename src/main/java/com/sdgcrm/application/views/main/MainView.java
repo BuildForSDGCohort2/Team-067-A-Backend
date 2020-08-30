@@ -3,13 +3,22 @@ package com.sdgcrm.application.views.main;
 import java.util.Arrays;
 import java.util.Optional;
 
+import com.sdgcrm.application.data.entity.User;
+import com.sdgcrm.application.data.service.UserService;
+import com.sdgcrm.application.security.SecurityUtils;
+import com.sdgcrm.application.views.customer.CustomerView;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.details.Details;
+import com.vaadin.flow.component.details.DetailsVariant;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -26,6 +35,7 @@ import com.vaadin.flow.theme.lumo.Lumo;
 import com.sdgcrm.application.views.main.MainView;
 import com.sdgcrm.application.views.hello.HelloView;
 import com.sdgcrm.application.views.about.AboutView;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -38,12 +48,26 @@ public class MainView extends AppLayout {
 
     private final Tabs menu;
     private H1 viewTitle;
+    private H1 userTitle;
 
-    public MainView() {
+    UserService userservice;
+    User currentUser;
+
+
+    public MainView( @Autowired
+                             UserService userservice) {
+        this.userservice= userservice;
+        currentUser= userservice.findByEmail(SecurityUtils.getLoggedinUsername());
         setPrimarySection(Section.DRAWER);
         addToNavbar(true, createHeaderContent());
         menu = createMenu();
-        addToDrawer(createDrawerContent(menu));
+        Details component = new Details("Expandable Details",
+                new Text("Toggle using mouse, Enter and Space keys."));
+        component.addOpenedChangeListener(e ->
+                Notification.show(e.isOpened() ? "Opened" : "Closed"));
+
+
+        addToDrawer(createDrawerContent(menu),component);
     }
 
     private Component createHeaderContent() {
@@ -55,8 +79,22 @@ public class MainView extends AppLayout {
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
         layout.add(new DrawerToggle());
         viewTitle = new H1();
+        userTitle= new H1(currentUser.getFirstname() +", "+ currentUser.getLastname());
         layout.add(viewTitle);
-        layout.add(new Image("images/user.svg", "Avatar"));
+        userTitle.getStyle().set("margin-right", "10px");
+
+        Image avatar=  new Image("images/user.svg", "Avatar");
+        layout.add(avatar, userTitle);
+
+        ContextMenu contextMenu = new ContextMenu(userTitle);
+        contextMenu.setOpenOnClick(true);
+        contextMenu.addItem("Settings",
+                e -> Notification.show("Not implemented yet.", 3000,
+                        Notification.Position.BOTTOM_CENTER));
+        Anchor li= new Anchor("/logout", "Logout");
+        li.setClassName("centered-content");
+        contextMenu.add(li);
+
         return layout;
     }
 
@@ -71,7 +109,8 @@ public class MainView extends AppLayout {
         logoLayout.setId("logo");
         logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         logoLayout.add(new Image("images/logo.png", "SDGCRM logo"));
-        logoLayout.add(new H1("SDGCRM"));
+
+        logoLayout.add(new H1(currentUser.getCompanyName().toUpperCase()));
         layout.add(logoLayout, menu);
         return layout;
     }
@@ -86,10 +125,16 @@ public class MainView extends AppLayout {
     }
 
     private Component[] createMenuItems() {
+
+
+        RouterLink li= new RouterLink("Customers", CustomerView.class);
+
         RouterLink[] links = new RouterLink[] {
-            new RouterLink("Hello", HelloView.class),
-            new RouterLink("About", AboutView.class)
+            new RouterLink("Customers", CustomerView.class),
+            new RouterLink("Account", HelloView.class),
+            new RouterLink("About", AboutView.class),
         };
+        li.add(links);
         return Arrays.stream(links).map(MainView::createTab).toArray(Tab[]::new);
     }
 

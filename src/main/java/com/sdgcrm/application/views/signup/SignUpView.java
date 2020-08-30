@@ -130,7 +130,7 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
 
         Button loginButton = new Button("Already Signed Up");
         Anchor signIn = new Anchor("/", "Already Signed Up? Login");
-        signIn.add("centered-content");
+        signIn.addClassName("centered-content");
 
         submitButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 

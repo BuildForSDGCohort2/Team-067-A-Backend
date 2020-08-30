@@ -3,7 +3,6 @@ package com.sdgcrm.application.data.service;
 
 import com.sdgcrm.application.data.entity.User;
 import com.sdgcrm.application.repository.UserRepository;
-import com.vaadin.flow.server.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +23,11 @@ public class UserService implements Serializable {
 
     }
 
+    public User findByEmail(String email)  {
+
+
+        return  userRepository.findByEmail(email);
+    }
 
     public List<String> getCompanyPosition() {
         return Arrays.asList("Owner", "Co-Owner", "Representative");

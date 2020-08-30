@@ -42,3 +42,16 @@ vaadin-tab[selected] {
   background-color: var(--lumo-primary-color-10pct);
   color: var(--lumo-primary-text-color);
 }
+
+.centered-content{
+  margin: 0px auto;
+  max-width: 100%;
+  align-items: center !important;
+}
+.magintitle{
+  margin-right: 10px;
+}
+
+v-horizontal > .v-spacing {
+  width: 50px;
+}

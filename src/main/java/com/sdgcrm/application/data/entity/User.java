@@ -8,6 +8,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -55,8 +57,8 @@ public class User{
     @NotBlank
     private String companyPosition;
 
-
-
+    @OneToMany(mappedBy="company", fetch = FetchType.EAGER)
+    private List<Customer> client = new LinkedList<>();
     
 
     @NotBlank
@@ -184,5 +186,14 @@ public class User{
 
     public void setActive(int active) {
         this.active = active;
+    }
+
+
+    public List<Customer> getClients() {
+        return client;
+    }
+
+    public void setClients(List<Customer> customers) {
+        this.client = customers;
     }
 }

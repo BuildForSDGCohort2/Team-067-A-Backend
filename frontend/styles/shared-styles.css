@@ -10,3 +10,27 @@
   max-width: 100%;
   align-items: center !important;
 }
+
+
+/* List view */
+.list-view .content {
+  display: flex;
+}
+
+.list-view .customer-grid {
+  flex: 2;
+}
+
+
+.list-view .customer-form {
+  flex: 1;
+  padding: var(--lumo-space-m);
+
+}
+
+@media all and (max-width: 1100px) {
+  .list-view.editing .toolbar,
+  .list-view.editing .customer-grid {
+    display: none;
+  }
+}

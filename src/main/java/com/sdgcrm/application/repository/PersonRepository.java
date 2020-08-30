@@ -1,4 +1,4 @@
-package com.sdgcrm.application.data.service;
+package com.sdgcrm.application.repository;
 
 import com.sdgcrm.application.data.entity.Person;
 
