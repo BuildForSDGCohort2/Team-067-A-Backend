@@ -4,7 +4,9 @@ import com.sdgcrm.application.data.entity.Role;
 import com.sdgcrm.application.data.entity.RoleName;
 import com.sdgcrm.application.data.entity.User;
 import com.sdgcrm.application.data.service.UserService;
+import com.sdgcrm.application.email.ScheduleEmailRequest;
 import com.sdgcrm.application.repository.RoleRepository;
+import com.sdgcrm.application.service.EmailService;
 import com.sdgcrm.application.views.AppConst;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -61,6 +63,9 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
     @Autowired
     PasswordEncoder encoder;
 
+    @Autowired
+    EmailService emailservice;
+
     /**
      * Flag for disabling first run for password validation
      */
@@ -69,11 +74,12 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
     /**
      * We use Spring to inject the backend into our view
      */
-    public SignUpView(UserService userservice, RoleRepository roleRepository, PasswordEncoder encoder) {
+    public SignUpView(UserService userservice, RoleRepository roleRepository, PasswordEncoder encoder, EmailService emailservice) {
 
         this.userservice= userservice;
         this.roleRepository= roleRepository;
         this.encoder= encoder;
+        this.emailservice=emailservice;
         /*
          * Create the components we'll need
          */
@@ -250,6 +256,16 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
                 String msg = String.format(
                         "Thank you %s, your registration was submitted! please check your email to confirm account",
                         emailField.getValue());
+
+
+                ScheduleEmailRequest welcomemail= new ScheduleEmailRequest();
+                welcomemail.setEmail(emailField.getValue());
+                welcomemail.setSubject("Welcome to the Eazy Life");
+                welcomemail.setName(firstnameField.getValue());
+
+                welcomemail.setTemplate("welcome.html");
+
+                emailservice.scheduleEmail(welcomemail);
 
 
                 Notification.show(msg, 3000, Notification.Position.MIDDLE);
