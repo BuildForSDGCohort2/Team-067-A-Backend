@@ -16,6 +16,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -34,13 +35,11 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Route("signup")
 @CssImport("./styles/shared-styles.css")
@@ -66,6 +65,9 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
     @Autowired
     EmailService emailservice;
 
+    @Value("${application.base.url}")
+    String baseurl;
+
     /**
      * Flag for disabling first run for password validation
      */
@@ -84,7 +86,8 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
          * Create the components we'll need
          */
 
-        H2 title = new H2("Signup form");
+        Image image = new Image("https://res.cloudinary.com/moversng/image/upload/q_auto/v1598888469/signuplogo_dxlkwc.svg", "logo");
+
 
 
         TextField firstnameField = new TextField("First name");
@@ -98,14 +101,15 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
 
 
         EmailField emailField = new EmailField("Email");
-        binder.forField(emailField).asRequired().bind(User::getEmail,User::setEmail);
+        binder.forField(emailField).asRequired().withValidator(new EmailValidator(
+                "This doesn't look like a valid email address")).bind(User::getEmail,User::setEmail);
 
 
         TextField companyNameField = new TextField("Company Name");
         binder.forField(companyNameField).asRequired().bind(User::getCompanyName,User::setCompanyName);
 
         ComboBox<String> companyPositionField = new ComboBox<>("Company Position");
-        binder.forField(companyPositionField).bind(User::getCompanyPosition,User::setCompanyPosition);
+        binder.forField(companyPositionField).asRequired().bind(User::getCompanyPosition,User::setCompanyPosition);
         companyPositionField.setAllowCustomValue(false);
 
         TextField locationField = new TextField("Location");
@@ -120,16 +124,25 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
 
         // We'll need these fields later on so let's store them as class variables
         allowMarketingBox = new Checkbox("Accept Terms and Conditions");
-        allowMarketingBox.getStyle().set("padding-top", "10px");
 
+        allowMarketingBox.getStyle().set("padding-top", "10px");
+        binder.forField(allowMarketingBox).asRequired();
 
         emailField.setVisible(true);
 
         passwordField1 = new PasswordField("Wanted password");
+
         passwordField2 = new PasswordField("Confirm password");
 
-        binder.forField(passwordField2).bind(User::getPassword,User::setPassword);
+        binder.forField(passwordField2).asRequired().withValidator((s, valueContext) -> {
+                    if(!passwordField1.getValue().equals(passwordField2.getValue())){
+                        return ValidationResult.error("passwords do not match!");
+                    }else {
+                        return ValidationResult.ok();
+                    }
 
+
+                }).bind(User::getPassword,User::setPassword);
         Span errorMessage = new Span();
         Span successMessage = new Span();
         Button submitButton = new Button("Sign Up");
@@ -147,7 +160,7 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
         // Create a FormLayout with all our components. The FormLayout doesn't have any
         // logic (validation, etc.), but it allows us to configure Responsiveness from
         // Java code and its defaults looks nicer than just using a VerticalLayout.
-        FormLayout formLayout = new FormLayout(title,successMessage, firstnameField, lastnameField, companyNameField, companyPositionField, passwordField1, passwordField2,
+        FormLayout formLayout = new FormLayout(image,successMessage, firstnameField, lastnameField, companyNameField, companyPositionField, passwordField1, passwordField2,
                  emailField, phoneField,locationField, allowMarketingBox, errorMessage, submitButton, signIn);
 
         // Restrict maximum width and center on page
@@ -161,7 +174,7 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
 
         // These components take full width regardless if we use one column or two (it
         // just looks better that way)
-        formLayout.setColspan(title, 2);
+        formLayout.setColspan(image, 2);
         formLayout.setColspan(errorMessage, 2);
         formLayout.setColspan(submitButton, 2);
         formLayout.setColspan(successMessage, 2);
@@ -200,12 +213,16 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
              enablePasswordValidation = true;
             });
 
+        passwordField2.addValueChangeListener(inputEvent -> passwordValidator(passwordField2.getValue()));
+
+
 
         submitButton.addClickListener(e -> {
 
             // Creating user's account
 
-            if ( binder.validate().hasErrors()) {
+
+            if ( binder.validate().hasErrors() ) {
                 Notification.show("Validation error count: "
                         + binder.validate().getFieldValidationStatuses().toString());
 
@@ -246,15 +263,16 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
                 user.setCompanyName(companyNameField.getValue());
                 user.setCompanyPosition(companyPositionField.getValue());
                 user.setPassword( encoder.encode(passwordField2.getValue()));
+                user.setUserToken(generateVerificationString());
                 user.setRoles(roles);
 
                 System.out.println(user.toString());
                 userservice.store(user);
 
-                successMessage.setText("<br/> Thank you %s, your registration was submitted! please check your email to confirm account "+ emailField.getValue() +" or contact support");
+                successMessage.setText("Thank you, your registration was submitted! please check your email to confirm account "+ emailField.getValue() +" or contact support");
 
                 String msg = String.format(
-                        "Thank you %s, your registration was submitted! please check your email to confirm account",
+                        "Thank you, your registration was submitted! please check your email to confirm account",
                         emailField.getValue());
 
 
@@ -262,6 +280,7 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
                 welcomemail.setEmail(emailField.getValue());
                 welcomemail.setSubject("Welcome to the Eazy Life");
                 welcomemail.setName(firstnameField.getValue());
+                welcomemail.setBody(baseurl+"login?verify="+ user.getUserToken());
 
                 welcomemail.setTemplate("welcome.html");
 
@@ -307,7 +326,7 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
      * <p>
      * 2) Values in both fields match each other
      */
-    private ValidationResult passwordValidator(String pass1, ValueContext ctx) {
+    private ValidationResult passwordValidator(String pass1 ) {
 
         /*
          * Just a simple length check. A real version should check for password
@@ -335,6 +354,11 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
 
+    }
+
+    public static String generateVerificationString() {
+        String uuid = UUID.randomUUID().toString();
+        return uuid;
     }
 
 

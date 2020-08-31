@@ -52,6 +52,8 @@ public class User{
     private String companyName;
 
     private int active;
+
+    private String userToken;
     
     
     @NotBlank
@@ -195,5 +197,13 @@ public class User{
 
     public void setClients(List<Customer> customers) {
         this.client = customers;
+    }
+
+    public String getUserToken() {
+        return userToken;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
     }
 }

@@ -36,7 +36,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .requestCache().requestCache(new CustomRequestCache())
                 .and()
 
-
+                .authorizeRequests().antMatchers("/login").permitAll().and()
                 .authorizeRequests().antMatchers("/signup").permitAll()
                 .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
 

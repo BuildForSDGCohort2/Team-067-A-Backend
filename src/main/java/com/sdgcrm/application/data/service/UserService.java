@@ -29,8 +29,14 @@ public class UserService implements Serializable {
         return  userRepository.findByEmail(email);
     }
 
+    public User findByUserToken(String token)  {
+
+
+        return  userRepository.findByUserToken(token);
+    }
+
     public List<String> getCompanyPosition() {
-        return Arrays.asList("Owner", "Co-Owner", "Representative");
+        return Arrays.asList("Owner");
     }
 
 

@@ -23,7 +23,6 @@ public class ConfigureUIServiceInitListener implements VaadinServiceInitListener
 
 
         if (!SecurityUtils.isUserLoggedIn() && !event.getLocation().getPath().equals("signup") ) {
-            System.out.println("not authenticated");
             event.rerouteTo(LoginView.class);
 
         }
