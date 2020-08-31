@@ -7,7 +7,6 @@
 # Editor-based HTTP Client requests
 /httpRequests/
 
-*.properties
 .DS_Store
 *.swp
 *.iml
