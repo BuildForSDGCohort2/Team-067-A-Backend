@@ -6,7 +6,11 @@ import java.util.Optional;
 import com.sdgcrm.application.data.entity.User;
 import com.sdgcrm.application.data.service.UserService;
 import com.sdgcrm.application.security.SecurityUtils;
+import com.sdgcrm.application.views.asset.AssetView;
 import com.sdgcrm.application.views.customer.CustomerView;
+import com.sdgcrm.application.views.deal.DealView;
+import com.sdgcrm.application.views.employee.EmployeeView;
+import com.sdgcrm.application.views.product.ProductView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -61,13 +65,11 @@ public class MainView extends AppLayout {
         setPrimarySection(Section.DRAWER);
         addToNavbar(true, createHeaderContent());
         menu = createMenu();
-        Details component = new Details("Expandable Details",
-                new Text("Toggle using mouse, Enter and Space keys."));
-        component.addOpenedChangeListener(e ->
-                Notification.show(e.isOpened() ? "Opened" : "Closed"));
 
 
-        addToDrawer(createDrawerContent(menu),component);
+
+
+        addToDrawer(createDrawerContent(menu));
     }
 
     private Component createHeaderContent() {
@@ -127,14 +129,15 @@ public class MainView extends AppLayout {
     private Component[] createMenuItems() {
 
 
-        RouterLink li= new RouterLink("Customers", CustomerView.class);
-
         RouterLink[] links = new RouterLink[] {
-            new RouterLink("Customers", CustomerView.class),
-            new RouterLink("Account", HelloView.class),
+                new RouterLink("Product", ProductView.class),
+                new RouterLink("Employee Management", EmployeeView.class),
+                new RouterLink("Customer Management", CustomerView.class),
+                new RouterLink("Order/Deal Management", DealView.class),
+                new RouterLink("Asset Management", AssetView.class),
+                new RouterLink("Account Management", HelloView.class),
             new RouterLink("About", AboutView.class),
         };
-        li.add(links);
         return Arrays.stream(links).map(MainView::createTab).toArray(Tab[]::new);
     }
 

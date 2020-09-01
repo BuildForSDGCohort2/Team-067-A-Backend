@@ -12,7 +12,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
 
 
-    @Query("select c from Customer c where lower(c.firstName) like lower(concat('%', ?1, '%')) and c.company.id = ?2 or lower(c.lastName) like lower(concat('%', ?1, '%')) and c.company.id = ?2")
+    @Query("select c from Customer c where lower(c.fullName) like lower(concat('%', ?1, '%')) and c.company.id = ?2 ")
     List<Customer> search(String searchTerm, long userId);
 
     List<Customer> findByCompany(User loggedincompany);

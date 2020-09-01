@@ -29,9 +29,8 @@ public class CustomerForm extends FormLayout {
 
     User currentUser;
 
-    TextField firstNametf = new TextField("First Name");
-    TextField lastNametf = new TextField("Last Name");
-    EmailField emailtf = new EmailField("Email");
+    TextField fullNametf = new TextField("Full Name");
+   EmailField emailtf = new EmailField("Email");
     TextField phonetf = new TextField("Phone");
     TextField locationtf = new TextField("Location");
     TextField companyNametf = new TextField("Company Name");
@@ -46,8 +45,7 @@ public class CustomerForm extends FormLayout {
         this.currentUser= currentUser;
       //  binder.bindInstanceFields(this);
 
-        binder.forField(firstNametf).bind(Customer::getFirstName,Customer::setFirstName);
-        binder.forField(lastNametf).bind(Customer::getLastName,Customer::setLastName);
+        binder.forField(fullNametf).bind(Customer::getFullName,Customer::setFullName);
         binder.forField(emailtf).bind(Customer::getEmail,Customer::setEmail);
         binder.forField(locationtf).bind(Customer::getLocation,Customer::setLocation);
         binder.forField(companyNametf).bind(Customer::getCompanyName,Customer::setCompanyName);
@@ -58,8 +56,7 @@ public class CustomerForm extends FormLayout {
         binder.forField(notestf).bind(Customer::getNotes,Customer::setNotes);
         addClassName("customer-form");
         getStyle().set("margin","10px");
-        add(firstNametf,
-                lastNametf,
+        add(fullNametf,
                 emailtf,
                 phonetf,
                 companyNametf,

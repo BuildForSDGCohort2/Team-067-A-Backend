@@ -21,9 +21,9 @@ public class Customer {
     )
     private Long id;
 
-    private String firstName;
+    private String fullName;
 
-    private String lastName;
+
 
 
     @Email
@@ -43,20 +43,12 @@ public class Customer {
     @JoinColumn(name="client_id")
     private User company;
 
-    public String getFirstName() {
-        return firstName;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getEmail() {

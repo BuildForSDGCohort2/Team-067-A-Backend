@@ -59,9 +59,12 @@ public class User{
     @NotBlank
     private String companyPosition;
 
-    @OneToMany(mappedBy="company", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="company", fetch = FetchType.LAZY)
     private List<Customer> client = new LinkedList<>();
-    
+
+
+    @OneToMany(mappedBy="employer", fetch = FetchType.LAZY)
+    private List<Employee> employer = new LinkedList<>();
 
     @NotBlank
     @Size(min=6, max = 100)
