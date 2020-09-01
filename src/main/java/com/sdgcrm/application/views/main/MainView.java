@@ -46,7 +46,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 
 @PWA(name = "SDGCRM", shortName = "SDGCRM",  enableInstallPrompt = false)
-@Theme(value = Lumo.class, variant = Lumo.DARK)
 @CssImport("./styles/views/main/main-view.css")
 public class MainView extends AppLayout {
 
@@ -91,8 +90,7 @@ public class MainView extends AppLayout {
         ContextMenu contextMenu = new ContextMenu(userTitle);
         contextMenu.setOpenOnClick(true);
         contextMenu.addItem("Settings",
-                e -> Notification.show("Not implemented yet.", 3000,
-                        Notification.Position.BOTTOM_CENTER));
+                e -> getUI().ifPresent(ui -> ui.navigate("Setting")));
         Anchor li= new Anchor("/logout", "Logout");
         li.setClassName("centered-content");
         contextMenu.add(li);

@@ -52,7 +52,7 @@ public class LoginView extends VerticalLayout implements  BeforeEnterObserver {
 
         add(image,successMessage, login);
 
-        Button registerbtn= new Button("Create new user", new Icon(VaadinIcon.ARROW_RIGHT));
+        Button registerbtn= new Button("Get Stated", new Icon(VaadinIcon.ARROW_RIGHT));
 
         registerbtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         registerbtn.addClickListener(e -> {

@@ -40,4 +40,7 @@ public class UserService implements Serializable {
     }
 
 
+    public boolean existsByEmail(String email) {
+        return  userRepository.existsByEmail(email);
+    }
 }

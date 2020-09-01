@@ -220,9 +220,9 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
         submitButton.addClickListener(e -> {
 
             // Creating user's account
+            boolean userAlreadyExists=userservice.existsByEmail(emailField.getValue());
 
-
-            if ( binder.validate().hasErrors() ) {
+            if ( binder.validate().hasErrors() | userAlreadyExists==true ) {
                 Notification.show("Validation error count: "
                         + binder.validate().getFieldValidationStatuses().toString());
 
