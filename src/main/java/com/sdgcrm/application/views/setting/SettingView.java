@@ -35,7 +35,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
 @Route(value = "Setting", layout = MainView.class)
-
 @PageTitle("Setting")
 @CssImport("./styles/views/about/about-view.css")
 public class SettingView extends Div {

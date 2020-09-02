@@ -34,7 +34,7 @@ public class CustomerForm extends FormLayout {
     TextField phonetf = new TextField("Phone");
     TextField locationtf = new TextField("Location");
     TextField companyNametf = new TextField("Company Name");
-    TextField notestf = new TextField("Notes");
+    TextArea notestf = new TextArea("Notes");
 
     Button save = new Button("Save");
     Button delete = new Button("Delete");

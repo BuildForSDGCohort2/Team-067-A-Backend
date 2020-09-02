@@ -45,8 +45,9 @@ import org.springframework.beans.factory.annotation.Autowired;
  * The main view is a top-level placeholder for other views.
  */
 
-@PWA(name = "SDGCRM", shortName = "SDGCRM",  enableInstallPrompt = false)
+@PWA(name = "SDGCRM", shortName = "SDGCRM",  enableInstallPrompt = true)
 @CssImport("./styles/views/main/main-view.css")
+@Theme(value = Lumo.class, variant =Lumo.DARK)
 public class MainView extends AppLayout {
 
     private final Tabs menu;
