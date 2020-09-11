@@ -1,13 +1,10 @@
 package com.sdgcrm.application.views.employee;
 
-import com.sdgcrm.application.data.entity.Customer;
 import com.sdgcrm.application.data.entity.Employee;
 import com.sdgcrm.application.data.entity.User;
-import com.sdgcrm.application.data.service.CustomerService;
 import com.sdgcrm.application.data.service.EmployeeService;
 import com.sdgcrm.application.data.service.UserService;
 import com.sdgcrm.application.security.SecurityUtils;
-import com.sdgcrm.application.views.customer.CustomerForm;
 import com.sdgcrm.application.views.main.MainView;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.button.Button;
@@ -15,6 +12,8 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -120,12 +119,14 @@ public class EmployeeView  extends Div{
     }
 
     private HorizontalLayout getToolbar() {
-        filterText.setPlaceholder("Search Employee ...");
+        filterText.setPlaceholder("Search Staffs ...");
+        Icon icon = VaadinIcon.SEARCH.create();
+        filterText.setPrefixComponent(icon);
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> updateList());
 
-        Button addEmployeeButton = new Button("New Employee");
+        Button addEmployeeButton = new Button("New Staffs");
 
 
         addEmployeeButton.addClickListener(click -> addEmployee());

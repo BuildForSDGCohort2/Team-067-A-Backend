@@ -1,6 +1,8 @@
 package com.sdgcrm.application.data.entity;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -59,18 +61,25 @@ public class User{
     @NotBlank
     private String companyPosition;
 
-    @OneToMany(mappedBy="company", fetch = FetchType.LAZY)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy="company")
     private List<Customer> client = new LinkedList<>();
 
 
-    @OneToMany(mappedBy="employer", fetch = FetchType.LAZY)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy="company")
+    private List<Product> product  = new LinkedList<>();
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy="employer")
     private List<Employee> employer = new LinkedList<>();
 
     @NotBlank
     @Size(min=6, max = 100)
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany()
     @JoinTable(name = "user_roles", 
     	joinColumns = @JoinColumn(name = "user_id"), 
     	inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -208,5 +217,26 @@ public class User{
 
     public void setUserToken(String userToken) {
         this.userToken = userToken;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", email='" + email + '\'' +
+                ", phone=" + phone +
+                ", location='" + location + '\'' +
+                ", theme='" + theme + '\'' +
+                ", companyName='" + companyName + '\'' +
+                ", active=" + active +
+                ", userToken='" + userToken + '\'' +
+                ", companyPosition='" + companyPosition + '\'' +
+                ", client=" + client +
+                ", employer=" + employer +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }

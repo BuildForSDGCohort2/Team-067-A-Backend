@@ -14,3 +14,10 @@
   max-width: 100%;
   align-items: center !important;
 }
+.upload-btn{
+  width: max-content !important;
+
+}
+.v-upload .v-button {
+  color: red;
+}

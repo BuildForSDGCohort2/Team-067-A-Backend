@@ -24,8 +24,6 @@ public class UserService implements Serializable {
     }
 
     public User findByEmail(String email)  {
-
-
         return  userRepository.findByEmail(email);
     }
 

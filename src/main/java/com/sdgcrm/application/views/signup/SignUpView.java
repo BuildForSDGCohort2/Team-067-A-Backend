@@ -63,6 +63,9 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
     PasswordEncoder encoder;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     EmailService emailservice;
 
     @Value("${application.base.url}")
@@ -82,6 +85,7 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
         this.roleRepository= roleRepository;
         this.encoder= encoder;
         this.emailservice=emailservice;
+        init();
         /*
          * Create the components we'll need
          */
@@ -258,11 +262,11 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
                 user.setFirstname(firstnameField.getValue());
                 user.setLastname(lastnameField.getValue());
                 user.setEmail(emailField.getValue());
-                user.setPhone( Long.parseLong(phoneField.getValue()));
+                user.setPhone(Long.parseLong(phoneField.getValue()));
                 user.setLocation(locationField.getValue());
                 user.setCompanyName(companyNameField.getValue());
                 user.setCompanyPosition(companyPositionField.getValue());
-                user.setPassword( encoder.encode(passwordField2.getValue()));
+                user.setPassword(passwordEncoder.encode(passwordField2.getValue()));
                 user.setUserToken(generateVerificationString());
                 user.setRoles(roles);
 
@@ -271,14 +275,13 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
 
                 successMessage.setText("Thank you, your registration was submitted! please check your email to confirm account "+ emailField.getValue() +" or contact support");
 
-                String msg = String.format(
-                        "Thank you, your registration was submitted! please check your email to confirm account",
+                String msg = String.format("Thank you, your registration was submitted! please check your email to confirm account",
                         emailField.getValue());
 
 
                 ScheduleEmailRequest welcomemail= new ScheduleEmailRequest();
                 welcomemail.setEmail(emailField.getValue());
-                welcomemail.setSubject("Welcome to the Eazy Life");
+                welcomemail.setSubject("Welcome to the Easy Life");
                 welcomemail.setName(firstnameField.getValue());
                 welcomemail.setBody(baseurl+"login?verify="+ user.getUserToken());
 
@@ -288,8 +291,8 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
 
 
                 Notification.show(msg, 3000, Notification.Position.MIDDLE);
-                init();
 
+                init();
             }
 
 

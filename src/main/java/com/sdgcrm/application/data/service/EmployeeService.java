@@ -1,9 +1,7 @@
 package com.sdgcrm.application.data.service;
 
-import com.sdgcrm.application.data.entity.Customer;
 import com.sdgcrm.application.data.entity.Employee;
 import com.sdgcrm.application.data.entity.User;
-import com.sdgcrm.application.repository.CustomerRepository;
 import com.sdgcrm.application.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,5 +31,9 @@ public class EmployeeService  implements Serializable {
         } else {
             return employeeRepository.search(stringFilter, currentUser.getId());
         }
+    }
+
+    public int getTotalEmployees(User currentUser) {
+       return  employeeRepository.findByEmployer(currentUser).size();
     }
 }

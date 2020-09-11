@@ -24,5 +24,11 @@ public class Deal {
     private String productName;
     private Double price;
     private String companyName;
+    private int quantity;
+    private int status;
+
+
+
+
 
 }

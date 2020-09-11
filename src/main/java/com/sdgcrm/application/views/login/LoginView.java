@@ -1,5 +1,6 @@
 package com.sdgcrm.application.views.login;
 
+import com.helger.commons.base64.Base64;
 import com.sdgcrm.application.data.entity.User;
 import com.sdgcrm.application.data.service.UserService;
 import com.sdgcrm.application.views.AppConst;
@@ -20,6 +21,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Viewport;
 import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Map;
@@ -91,6 +93,10 @@ public class LoginView extends VerticalLayout implements  BeforeEnterObserver {
 
     @Autowired
     UserService userservice;
+    @Autowired
+    PasswordEncoder encoder;
+
+
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
@@ -112,7 +118,10 @@ public class LoginView extends VerticalLayout implements  BeforeEnterObserver {
             String value = token.get(0);
 
            User validUser= userservice.findByUserToken(value);
+            System.out.println(validUser.toString());;
             validUser.setActive(1);
+
+            validUser.setPassword(encoder.encode(validUser.getPassword()));
             userservice.store(validUser);
             successMessage.setText("Account verification successful");
             Notification.show("Account verification successful- "

@@ -42,6 +42,7 @@ public class SettingView extends Div {
 
 
     TextField fullNametf = new TextField("Full Name");
+    TextField ejhe = new TextField("Full Name");
     EmailField emailtf = new EmailField("Email");
     TextField phonetf = new TextField("Phone");
     TextField locationtf = new TextField("Location");
@@ -56,26 +57,19 @@ public class SettingView extends Div {
     private ProgressBar unusedProgressBar;
 
     public SettingView() {
-        setId("abo-view");
 
         MemoryBuffer buffer = new MemoryBuffer();
         Upload upload = new Upload(buffer);
-        Div output = new Div();
 
-        upload.addSucceededListener(event -> {
-            Component component = createComponent(event.getMIMEType(),
-                    event.getFileName(), buffer.getInputStream());
-            showOutput(event.getFileName(), component, output);
-        });
 
 
 
 
         add(getToolbar());
         FormLayout sample = new FormLayout();
-        Image image = new Image("https://dummyimage.com/300x300/000/fff", "DummyImage");
+        Image image = new Image("https://dummyimage.com/200x200/000/fff", "DummyImage");
 
-
+        upload.addClassName("upload-btn");
         // Restrict maximum width and center on page
         sample.setMaxWidth("800px");
         sample.getStyle().set("margin", "0 auto");
@@ -85,16 +79,17 @@ public class SettingView extends Div {
         sample.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1, FormLayout.ResponsiveStep.LabelsPosition.TOP),
                 new FormLayout.ResponsiveStep("490px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP));
 
-        sample.add(image, upload, fullNametf,
+        sample.add(upload, ejhe,
+
+                fullNametf,
                 emailtf,
                 phonetf,
                 companyNametf,
                 locationtf,
                 notestf,
                 createButtonsLayout());
-        sample.setColspan(image, 1);
-        sample.setColspan(emailtf, 1);
-        sample.setColspan(phonetf, 1);
+        sample.setColspan(upload, 1);
+        sample.setColspan(ejhe, 1);
         add(sample);
 
 

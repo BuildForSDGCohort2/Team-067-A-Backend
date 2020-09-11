@@ -43,4 +43,8 @@ public class  CustomerService implements Serializable {
     public void delete(Customer customer) {
         customerRepository.delete(customer);
     }
+
+    public int getTotalCustomers(User currentUser) {
+        return customerRepository.findByCompany(currentUser).size();
+    }
 }

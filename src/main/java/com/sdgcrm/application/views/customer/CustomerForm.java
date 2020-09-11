@@ -2,8 +2,6 @@ package com.sdgcrm.application.views.customer;
 
 import com.sdgcrm.application.data.entity.Customer;
 import com.sdgcrm.application.data.entity.User;
-import com.sdgcrm.application.data.service.UserService;
-import com.sdgcrm.application.security.SecurityUtils;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
@@ -13,15 +11,12 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextAreaVariant;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.shared.Registration;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.validation.constraints.Email;
 
 public class CustomerForm extends FormLayout {
 
@@ -30,7 +25,7 @@ public class CustomerForm extends FormLayout {
     User currentUser;
 
     TextField fullNametf = new TextField("Full Name");
-   EmailField emailtf = new EmailField("Email");
+    EmailField emailtf = new EmailField("Email");
     TextField phonetf = new TextField("Phone");
     TextField locationtf = new TextField("Location");
     TextField companyNametf = new TextField("Company Name");

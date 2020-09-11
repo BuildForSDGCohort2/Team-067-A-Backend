@@ -8,6 +8,7 @@ import com.sdgcrm.application.data.service.UserService;
 import com.sdgcrm.application.security.SecurityUtils;
 import com.sdgcrm.application.views.asset.AssetView;
 import com.sdgcrm.application.views.customer.CustomerView;
+import com.sdgcrm.application.views.dashboard.DashboardView;
 import com.sdgcrm.application.views.deal.DealView;
 import com.sdgcrm.application.views.employee.EmployeeView;
 import com.sdgcrm.application.views.product.ProductView;
@@ -46,8 +47,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 
 @PWA(name = "SDGCRM", shortName = "SDGCRM",  enableInstallPrompt = true)
+@Theme(value = Lumo.class, variant=Lumo.DARK)
 @CssImport("./styles/views/main/main-view.css")
-@Theme(value = Lumo.class, variant =Lumo.DARK)
 public class MainView extends AppLayout {
 
     private final Tabs menu;
@@ -129,12 +130,13 @@ public class MainView extends AppLayout {
 
 
         RouterLink[] links = new RouterLink[] {
+                new RouterLink("Dashboard", DashboardView.class),
                 new RouterLink("Product", ProductView.class),
-                new RouterLink("Employee Management", EmployeeView.class),
-                new RouterLink("Customer Management", CustomerView.class),
-                new RouterLink("Order/Deal Management", DealView.class),
-                new RouterLink("Asset Management", AssetView.class),
-                new RouterLink("Account Management", HelloView.class),
+                new RouterLink("Staffs", EmployeeView.class),
+                new RouterLink("Customers ", CustomerView.class),
+                new RouterLink("Order / Deal ", DealView.class),
+                new RouterLink("Inventory Asset ", AssetView.class),
+                new RouterLink("Account ", HelloView.class),
             new RouterLink("About", AboutView.class),
         };
         return Arrays.stream(links).map(MainView::createTab).toArray(Tab[]::new);
