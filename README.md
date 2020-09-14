@@ -1,6 +1,8 @@
 # Team-067-A-Backend
 
-<img src="https://res.cloudinary.com/moversng/image/upload/v1598887746/easycrmx2_kqmi0r.svg" />
+<img src="https://res.cloudinary.com/moversng/image/upload/v1600103267/easycrms_cfffze.svg" />
+
+<br/>
 
 ````
 CRM
