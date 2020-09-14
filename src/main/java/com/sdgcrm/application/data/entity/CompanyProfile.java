@@ -2,6 +2,7 @@ package com.sdgcrm.application.data.entity;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class CompanyProfile {
@@ -18,16 +19,28 @@ public class CompanyProfile {
 
     private String Name;
 
-    private String Location;
+    @NotNull
+    private String Location= "";
 
-    private String website;
+    @NotNull
+    private String website="";
 
+    @NotNull
     private String sector;
+
 
     @Lob
     @Column(length=100000)
     private byte[] profileImg;
 
+    @NotNull
+    private String facebook="";
+    @NotNull
+    private String twitter="";
+    @NotNull
+    private String instagram="";
+
+    private long phone;
 
     public User getUser() {
         return user;
@@ -82,6 +95,39 @@ public class CompanyProfile {
         Location = location;
         this.website = website;
         this.sector = sector;
+    }
+
+    public String getFacebook() {
+        return facebook;
+    }
+
+    public void setFacebook(String facebook) {
+        this.facebook = facebook;
+    }
+
+    public String getTwitter() {
+        return twitter;
+    }
+
+    public void setTwitter(String twitter) {
+        this.twitter = twitter;
+    }
+
+    public String getInstagram() {
+        return instagram;
+    }
+
+    public void setInstagram(String instagram) {
+        this.instagram = instagram;
+    }
+
+
+    public long getPhone() {
+        return phone;
+    }
+
+    public void setPhone(long phone) {
+        this.phone = phone;
     }
 
     public CompanyProfile() {

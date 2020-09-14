@@ -2,58 +2,46 @@ package com.sdgcrm.application.views.setting;
 
 import com.sdgcrm.application.data.entity.User;
 import com.sdgcrm.application.data.service.CompanyService;
-import com.sdgcrm.application.data.service.ProductService;
 import com.sdgcrm.application.data.service.UserService;
 import com.sdgcrm.application.security.SecurityUtils;
-import com.sdgcrm.application.views.dashboard.DashboardView;
 import com.sdgcrm.application.views.main.MainView;
 import com.vaadin.flow.component.*;
-import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
-import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.internal.MessageDigestUtil;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.StreamResource;
-import com.vaadin.flow.server.VaadinService;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.web.context.WebApplicationContext;
-import sun.tools.jconsole.Plotter;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
-import javax.servlet.ServletContext;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Iterator;
 
 @Route(value = "setting/organisation", layout = MainView.class)
@@ -68,14 +56,20 @@ public class OrganisationSettingView extends Div {
 
 
     TextField companyNametf = new TextField("Company Name");
-    TextField sectortf = new TextField("Sector");
-    EmailField emailtf = new EmailField("Email");
+
+    ComboBox<String> sectortf = new ComboBox<>("Company Category");
+
+    EmailField emailtf = new EmailField("Company Email");
     NumberField phonetf = new NumberField("Phone");
-    TextField locationtf = new TextField("Location");
+    TextField websitetf = new TextField("Website");
+    TextArea locationtf = new TextArea("Company Location");
 
 
+    TextField facebookurltf = new TextField("Facebook");
+    TextField twitterUrltf = new TextField("Twitter");
+    TextField instagramUrltf = new TextField("Twitter");
 
-    TextField roletf = new TextField("Role");
+
 
     Button save = new Button("Update Infomation");
 
@@ -90,12 +84,28 @@ public class OrganisationSettingView extends Div {
         this.companyService= companyService;
         currentUser= userservice.findByEmail(SecurityUtils.getLoggedinUsername());
         companyNametf.setValue(currentUser.getCompanyProfile().getName());
+        sectortf.setItems(companyService.getAllSectors());
+        sectortf.setAllowCustomValue(false);
         sectortf.setValue(currentUser.getCompanyProfile().getSector());
         emailtf.setValue(currentUser.getEmail());
-        emailtf.setReadOnly(true);
+
+        facebookurltf.setValue(currentUser.getCompanyProfile().getFacebook());
+        Icon icon = VaadinIcon.FACEBOOK.create();
+        facebookurltf.setPrefixComponent(icon);
+
+        twitterUrltf.setValue(currentUser.getCompanyProfile().getTwitter());
+        Icon icontw = VaadinIcon.TWITTER.create();
+        twitterUrltf.setPrefixComponent(icontw);
+
+        instagramUrltf.setValue(currentUser.getCompanyProfile().getInstagram());
+        Icon iconIN = VaadinIcon.LINK.create();
+        instagramUrltf.setPrefixComponent(iconIN);
+
+
         phonetf.setValue((double) currentUser.getPhone());
+
+        websitetf.setValue(currentUser.getCompanyProfile().getWebsite());
         locationtf.setValue(currentUser.getCompanyProfile().getLocation());
-        roletf.setValue(currentUser.getCompanyPosition());
 
 
 
@@ -159,9 +169,11 @@ public class OrganisationSettingView extends Div {
                 sectortf,
 
                 phonetf,
+                websitetf,
+                facebookurltf,
+                twitterUrltf,
+                instagramUrltf,
                 locationtf,
-
-                roletf,
                 emailtf,
                 createButtonsLayout());
 
@@ -173,6 +185,21 @@ public class OrganisationSettingView extends Div {
         sample.setColspan(companyNametf, 1);
         root.add(sample);
         add(root);
+
+        save.addClickListener(buttonClickEvent -> {
+           currentUser.getCompanyProfile().setName(companyNametf.getValue());
+           currentUser.getCompanyProfile().setPhone(phonetf.getValue().longValue());
+           currentUser.getCompanyProfile().setInstagram(instagramUrltf.getValue());
+           currentUser.getCompanyProfile().setTwitter(twitterUrltf.getValue());
+           currentUser.getCompanyProfile().setLocation(locationtf.getValue());
+           currentUser.getCompanyProfile().setFacebook(facebookurltf.getValue());
+            currentUser.getCompanyProfile().setSector(sectortf.getValue());
+            userService.store(currentUser);
+            showSuccessNotification("Organisation details updated successfully");
+
+
+
+        });
 
 
 
@@ -314,5 +341,17 @@ public class OrganisationSettingView extends Div {
     private void showOutput(String text, Component content,
                             HasComponents outputContainer) {
         System.out.println("file uploaded successfully");
+    }
+
+    public void showSuccessNotification(String message){
+        Notification notification = Notification.show(message, 3000, Notification.Position.BOTTOM_END);
+        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+
+    }
+
+    public void showErrorNotification(String message){
+        Notification notification = Notification.show(message, 3000, Notification.Position.BOTTOM_END);
+        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+
     }
 }

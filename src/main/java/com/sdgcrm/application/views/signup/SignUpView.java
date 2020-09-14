@@ -248,11 +248,21 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
             boolean userAlreadyExists=userservice.existsByEmail(emailField.getValue());
 
             if ( binder.validate().hasErrors() | userAlreadyExists==true ) {
-                Notification.show("Validation error count: "
-                        + binder.validate().getFieldValidationStatuses().toString());
+                if(binder.validate().getValidationErrors().size()==0){
 
-                errorMessage.setText("you have "+binder.validate().getValidationErrors().size() +" errors");
-                System.out.println(binder.validate().getBeanValidationResults().toString());
+                    showErrorNotification("Account already exists with username");
+
+                }else{
+
+                    showErrorNotification("Validation error count: "
+                            + binder.validate().getFieldValidationStatuses().toString());
+
+
+
+
+                }
+
+
             }else{
 
 
@@ -314,8 +324,7 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
 
                 emailservice.scheduleEmail(welcomemail);
 
-
-                Notification.show(msg, 3000, Notification.Position.MIDDLE);
+                showSuccessNotification(msg);
 
                 init();
             }
@@ -340,11 +349,16 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
     /**
      * We call this method when form submission has succeeded
      */
-    private void showSuccess() {
-        Notification notification = Notification.show("Data saved, welcome ");
+    public void showSuccessNotification(String message){
+        Notification notification = Notification.show(message, 3000, Notification.Position.BOTTOM_END);
         notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 
-        // Here you'd typically redirect the user to another view
+    }
+
+    public void showErrorNotification(String message){
+        Notification notification = Notification.show(message, 3000, Notification.Position.BOTTOM_END);
+        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+
     }
 
     /**

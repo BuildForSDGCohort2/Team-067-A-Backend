@@ -11,11 +11,13 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.progressbar.ProgressBar;
@@ -26,6 +28,7 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
+import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.internal.MessageDigestUtil;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -53,15 +56,15 @@ public class ProfileSettingView extends Div {
     User currentUser;
 
 
-    TextField firstnametf = new TextField("Full Name");
-    TextField lastnametf = new TextField("Full Name");
+    TextField firstnametf = new TextField("First Name");
+    TextField lastnametf = new TextField("Last Name");
     EmailField emailtf = new EmailField("Email");
     NumberField phonetf = new NumberField("Phone");
-    TextField locationtf = new TextField("Location");
 
 
+    ComboBox<String> roletf = new ComboBox<>("Company Position");
 
-    TextField roletf = new TextField("Role");
+
 
     Button save = new Button("Update Infomation");
 
@@ -70,8 +73,6 @@ public class ProfileSettingView extends Div {
 
     Image profilePic = new Image();
 
-    private Upload unusedUpload;
-    private ProgressBar unusedProgressBar;
 
     public ProfileSettingView(@Autowired UserService userService) {
 
@@ -83,10 +84,10 @@ public class ProfileSettingView extends Div {
         emailtf.setValue(currentUser.getEmail());
         emailtf.setReadOnly(true);
         phonetf.setValue((double) currentUser.getPhone());
-        locationtf.setValue(currentUser.getCompanyProfile().getLocation());
+        roletf.setItems(userservice.getCompanyPosition());
         roletf.setValue(currentUser.getCompanyPosition());
 
-
+        roletf.setReadOnly(true);
 
 
         if(currentUser.getProfileImg()!=null){
@@ -122,8 +123,8 @@ public class ProfileSettingView extends Div {
         upload.addSucceededListener(event -> {
             Component component = createComponent(event.getMIMEType(),
                     event.getFileName(), buffer.getInputStream());
-            Notification.show("Profile image updated successfully");
 
+            showSuccessNotification("Profile image updated successfully");
             showOutput(event.getFileName(), component, profilePic);
         });
         profilePic.getStyle().set("border-radius","50%");
@@ -133,6 +134,15 @@ public class ProfileSettingView extends Div {
         pic.add(profilePic, upload);
 
         root.add(pic);
+
+        save.addClickListener(buttonClickEvent -> {
+            currentUser.setFirstname(firstnametf.getValue());
+            currentUser.setLastname(lastnametf.getValue());
+            currentUser.setPhone(phonetf.getValue().longValue());
+
+            userService.store(currentUser);
+        showSuccessNotification("Profile details updated successfully");
+        });
 
 
 
@@ -151,7 +161,6 @@ public class ProfileSettingView extends Div {
                 lastnametf,
 
                 phonetf,
-                locationtf,
 
                 roletf,
                 emailtf,
@@ -189,11 +198,7 @@ public class ProfileSettingView extends Div {
 
         switchEmail.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         resetPassword.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
-
-
-
-
-        return new HorizontalLayout(switchEmail, resetPassword);
+         return new HorizontalLayout(switchEmail, resetPassword);
     }
 
 
@@ -314,5 +319,17 @@ public class ProfileSettingView extends Div {
     private void showOutput(String text, Component content,
                             HasComponents outputContainer) {
         System.out.println("file uploaded successfully");
+    }
+
+    public void showSuccessNotification(String message){
+        Notification notification = Notification.show(message, 3000, Notification.Position.BOTTOM_END);
+        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+
+    }
+
+    public void showErrorNotification(String message){
+        Notification notification = Notification.show(message, 3000, Notification.Position.BOTTOM_END);
+        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+
     }
 }
