@@ -1,5 +1,7 @@
 package com.sdgcrm.application.data.entity;
 
+import com.sun.mail.handlers.image_gif;
+import com.vaadin.flow.component.html.Image;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -9,6 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.io.ByteArrayOutputStream;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,6 +59,10 @@ public class User{
     private int active;
 
     private String userToken;
+
+    @Lob
+    @Column(length=100000)
+    private byte[] profileImg;
     
     
     @NotBlank
@@ -219,6 +226,14 @@ public class User{
         this.userToken = userToken;
     }
 
+    public byte[] getProfileImg() {
+        return profileImg;
+    }
+
+    public void setProfileImg(byte[] profileImg) {
+        this.profileImg = profileImg;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -239,4 +254,5 @@ public class User{
                 ", roles=" + roles +
                 '}';
     }
+
 }

@@ -1,6 +1,9 @@
 package com.sdgcrm.application.views.main;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Optional;
 
 import com.sdgcrm.application.data.entity.User;
@@ -34,6 +37,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
+import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 
@@ -41,6 +45,10 @@ import com.sdgcrm.application.views.main.MainView;
 import com.sdgcrm.application.views.hello.HelloView;
 import com.sdgcrm.application.views.about.AboutView;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -57,15 +65,18 @@ public class MainView extends AppLayout {
 
     UserService userservice;
     User currentUser;
-
+    Image avatar;
 
     public MainView( @Autowired
                              UserService userservice) {
         this.userservice= userservice;
         currentUser= userservice.findByEmail(SecurityUtils.getLoggedinUsername());
+
+        avatar=  new Image();
         setPrimarySection(Section.DRAWER);
         addToNavbar(true, createHeaderContent());
         menu = createMenu();
+
 
 
 
@@ -86,8 +97,13 @@ public class MainView extends AppLayout {
         layout.add(viewTitle);
         userTitle.getStyle().set("margin-right", "10px");
 
-        Image avatar=  new Image("images/user.svg", "Avatar");
-        layout.add(avatar, userTitle);
+        if(currentUser.getProfileImg()!=null){
+             updateProfileimage(currentUser.getProfileImg());
+        }else{
+        avatar.setSrc("images/user.svg");
+
+        }
+       layout.add(avatar, userTitle);
 
         ContextMenu contextMenu = new ContextMenu(userTitle);
         contextMenu.setOpenOnClick(true);
@@ -174,5 +190,35 @@ public class MainView extends AppLayout {
 
     private String getCurrentPageTitle() {
         return getContent().getClass().getAnnotation(PageTitle.class).value();
+    }
+
+
+    private void updateProfileimage(byte[] bytes) {
+
+        try {
+
+
+
+            avatar.getElement().setAttribute("src", new StreamResource(
+                    "sample", () -> new ByteArrayInputStream(bytes)));
+            try (ImageInputStream in = ImageIO.createImageInputStream(
+                    new ByteArrayInputStream(bytes))) {
+                final Iterator<ImageReader> readers = ImageIO
+                        .getImageReaders(in);
+                if (readers.hasNext()) {
+                    ImageReader reader = readers.next();
+                    try {
+                        reader.setInput(in);
+                        avatar.setWidth(32+ "px");
+                        avatar.setHeight(32+ "px");
+                    } finally {
+                        reader.dispose();
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

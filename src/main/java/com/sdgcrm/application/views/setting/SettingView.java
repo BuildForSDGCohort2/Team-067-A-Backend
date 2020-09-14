@@ -1,37 +1,54 @@
 package com.sdgcrm.application.views.setting;
 
-import com.sdgcrm.application.views.customer.CustomerForm;
+import com.sdgcrm.application.data.entity.User;
+import com.sdgcrm.application.data.service.ProductService;
+import com.sdgcrm.application.data.service.UserService;
+import com.sdgcrm.application.security.SecurityUtils;
 import com.sdgcrm.application.views.main.MainView;
 import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.dependency.JsModule;
+import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.EmailField;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
+import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.internal.MessageDigestUtil;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.server.VaadinService;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.web.context.WebApplicationContext;
+import sun.tools.jconsole.Plotter;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+import javax.servlet.ServletContext;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Iterator;
 
 @Route(value = "Setting", layout = MainView.class)
@@ -40,34 +57,94 @@ import java.util.Iterator;
 public class SettingView extends Div {
 
 
+    UserService userservice;
+    User currentUser;
 
-    TextField fullNametf = new TextField("Full Name");
-    TextField ejhe = new TextField("Full Name");
+
+    TextField firstnametf = new TextField("Full Name");
+    TextField lastnametf = new TextField("Full Name");
     EmailField emailtf = new EmailField("Email");
-    TextField phonetf = new TextField("Phone");
+    NumberField phonetf = new NumberField("Phone");
     TextField locationtf = new TextField("Location");
-    TextField companyNametf = new TextField("Company Name");
-    TextField notestf = new TextField("Notes");
 
-    Button save = new Button("Save");
-    Button delete = new Button("Delete");
-    Button close = new Button("Cancel");
+
+
+    TextField roletf = new TextField("Role");
+
+    Button save = new Button("Update Infomation");
+
+    Button switchEmail = new Button("Change Email");
+    Button resetPassword = new Button("Reset Password");
+
+    Image profilePic = new Image();
 
     private Upload unusedUpload;
     private ProgressBar unusedProgressBar;
 
-    public SettingView() {
+    public SettingView(@Autowired UserService userService) {
+
+
+        this.userservice= userService;
+        currentUser= userservice.findByEmail(SecurityUtils.getLoggedinUsername());
+        firstnametf.setValue(currentUser.getFirstname());
+        lastnametf.setValue(currentUser.getLastname());
+        emailtf.setValue(currentUser.getEmail());
+        emailtf.setReadOnly(true);
+        phonetf.setValue((double) currentUser.getPhone());
+        locationtf.setValue(currentUser.getLocation());
+        roletf.setValue(currentUser.getCompanyPosition());
+
+
+
+
+        if(currentUser.getProfileImg()!=null){
+
+
+            updateProfileimage(currentUser.getProfileImg());
+        }else{
+            System.out.println("nulled image");
+            profilePic.setSrc("images/user.svg");
+            profilePic.setWidthFull();
+
+        }
 
         MemoryBuffer buffer = new MemoryBuffer();
         Upload upload = new Upload(buffer);
 
+        upload.getStyle().set("margin","10px auto");
+        upload.setAcceptedFileTypes("image/jpeg", "image/png", "image/gif");
+        upload.setDropAllowed(false);
 
 
 
+
+        VerticalLayout root = new VerticalLayout();
+        root.setSizeUndefined();
+
+        VerticalLayout pic = new VerticalLayout();
+        pic.setSizeUndefined();
+        pic.setSpacing(true);
+        pic.getStyle().set("margin","0px auto");
+
+
+        upload.addSucceededListener(event -> {
+            Component component = createComponent(event.getMIMEType(),
+                    event.getFileName(), buffer.getInputStream());
+            Notification.show("Profile image updated successfully");
+
+            showOutput(event.getFileName(), component, profilePic);
+        });
+profilePic.getStyle().set("border-radius","50%");
 
         add(getToolbar());
+
+        pic.add(profilePic, upload);
+
+        root.add(pic);
+
+
+
         FormLayout sample = new FormLayout();
-        Image image = new Image("https://dummyimage.com/200x200/000/fff", "DummyImage");
 
         upload.addClassName("upload-btn");
         // Restrict maximum width and center on page
@@ -76,39 +153,55 @@ public class SettingView extends Div {
         sample.getStyle().set("padding", "10px");
         // Allow the form layout to be responsive. On device widths 0-490px we have one
         // column, then we have two. Field labels are always on top of the fields.
-        sample.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1, FormLayout.ResponsiveStep.LabelsPosition.TOP),
-                new FormLayout.ResponsiveStep("490px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP));
 
-        sample.add(upload, ejhe,
+        sample.add( firstnametf,
 
-                fullNametf,
-                emailtf,
+                lastnametf,
+
                 phonetf,
-                companyNametf,
                 locationtf,
-                notestf,
-                createButtonsLayout());
+
+                roletf,
+                emailtf,
+                createButtonsLayout(), createButtonsResetandchangeLayout());
+
+
+
+
+
         sample.setColspan(upload, 1);
-        sample.setColspan(ejhe, 1);
-        add(sample);
+        sample.setColspan(firstnametf, 1);
+        root.add(sample);
+        add(root);
 
 
 
 
     }
 
+
+
+
     private Component createButtonsLayout() {
 
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-        close.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
 
         save.addClickShortcut(Key.ENTER);
-        close.addClickShortcut(Key.ESCAPE);
+
+        save.setWidthFull();
+
+        return new HorizontalLayout(save);
+    }
+
+    private Component createButtonsResetandchangeLayout() {
+
+        switchEmail.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        resetPassword.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
 
 
 
-        return new HorizontalLayout(save, delete, close);
+
+        return new HorizontalLayout(switchEmail, resetPassword);
     }
 
 
@@ -130,11 +223,14 @@ public class SettingView extends Div {
         if (mimeType.startsWith("text")) {
             return createTextComponent(stream);
         } else if (mimeType.startsWith("image")) {
-            Image image = new Image();
+
             try {
 
                 byte[] bytes = IOUtils.toByteArray(stream);
-                image.getElement().setAttribute("src", new StreamResource(
+
+                currentUser.setProfileImg(bytes);
+                userservice.store(currentUser);
+                profilePic.getElement().setAttribute("src", new StreamResource(
                         fileName, () -> new ByteArrayInputStream(bytes)));
                 try (ImageInputStream in = ImageIO.createImageInputStream(
                         new ByteArrayInputStream(bytes))) {
@@ -144,8 +240,50 @@ public class SettingView extends Div {
                         ImageReader reader = readers.next();
                         try {
                             reader.setInput(in);
-                            image.setWidth(reader.getWidth(0) + "px");
-                            image.setHeight(reader.getHeight(0) + "px");
+                            profilePic.setWidth(200+ "px");
+                            profilePic.setHeight(200+ "px");
+                        } finally {
+                            reader.dispose();
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println(profilePic.getSrc());
+            System.out.println(profilePic.getHeight()+" "+ profilePic.getWidth());
+
+            return profilePic;
+        }
+        Div content = new Div();
+        String text = String.format("Mime type: '%s'\nSHA-256 hash: '%s'",
+                mimeType, MessageDigestUtil.sha256(stream.toString()));
+        content.setText(text);
+        return content;
+
+    }
+
+
+
+
+    private void updateProfileimage(byte[] bytes) {
+
+            try {
+
+
+
+                profilePic.getElement().setAttribute("src", new StreamResource(
+                        "sample", () -> new ByteArrayInputStream(bytes)));
+                try (ImageInputStream in = ImageIO.createImageInputStream(
+                        new ByteArrayInputStream(bytes))) {
+                    final Iterator<ImageReader> readers = ImageIO
+                            .getImageReaders(in);
+                    if (readers.hasNext()) {
+                        ImageReader reader = readers.next();
+                        try {
+                            reader.setInput(in);
+                            profilePic.setWidth(200+ "px");
+                            profilePic.setHeight(200+ "px");
                         } finally {
                             reader.dispose();
                         }
@@ -155,15 +293,10 @@ public class SettingView extends Div {
                 e.printStackTrace();
             }
 
-            return image;
         }
-        Div content = new Div();
-        String text = String.format("Mime type: '%s'\nSHA-256 hash: '%s'",
-                mimeType, MessageDigestUtil.sha256(stream.toString()));
-        content.setText(text);
-        return content;
 
-    }
+
+
 
     private Component createTextComponent(InputStream stream) {
         String text;
@@ -177,9 +310,6 @@ public class SettingView extends Div {
 
     private void showOutput(String text, Component content,
                             HasComponents outputContainer) {
-        HtmlComponent p = new HtmlComponent(Tag.P);
-        p.getElement().setText(text);
-        outputContainer.add(p);
-        outputContainer.add(content);
+        System.out.println("file uploaded successfully");
     }
 }
