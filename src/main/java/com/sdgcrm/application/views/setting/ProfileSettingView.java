@@ -1,21 +1,20 @@
 package com.sdgcrm.application.views.setting;
 
 import com.sdgcrm.application.data.entity.User;
-import com.sdgcrm.application.data.service.ProductService;
 import com.sdgcrm.application.data.service.UserService;
 import com.sdgcrm.application.security.SecurityUtils;
+import com.sdgcrm.application.views.dashboard.DashboardView;
 import com.sdgcrm.application.views.main.MainView;
-import com.vaadin.flow.component.*;
-import com.vaadin.flow.component.accordion.Accordion;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasComponents;
+import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -27,34 +26,27 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
-import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.internal.MessageDigestUtil;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.StreamResource;
-import com.vaadin.flow.server.VaadinService;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.web.context.WebApplicationContext;
-import sun.tools.jconsole.Plotter;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
-import javax.servlet.ServletContext;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Iterator;
 
-@Route(value = "Setting", layout = MainView.class)
+@Route(value = "setting/profile", layout = MainView.class)
 @PageTitle("Setting")
 @CssImport("./styles/views/about/about-view.css")
-public class SettingView extends Div {
+public class ProfileSettingView extends Div {
 
 
     UserService userservice;
@@ -81,7 +73,7 @@ public class SettingView extends Div {
     private Upload unusedUpload;
     private ProgressBar unusedProgressBar;
 
-    public SettingView(@Autowired UserService userService) {
+    public ProfileSettingView(@Autowired UserService userService) {
 
 
         this.userservice= userService;
@@ -91,7 +83,7 @@ public class SettingView extends Div {
         emailtf.setValue(currentUser.getEmail());
         emailtf.setReadOnly(true);
         phonetf.setValue((double) currentUser.getPhone());
-        locationtf.setValue(currentUser.getLocation());
+        locationtf.setValue(currentUser.getCompanyProfile().getLocation());
         roletf.setValue(currentUser.getCompanyPosition());
 
 
@@ -134,7 +126,7 @@ public class SettingView extends Div {
 
             showOutput(event.getFileName(), component, profilePic);
         });
-profilePic.getStyle().set("border-radius","50%");
+        profilePic.getStyle().set("border-radius","50%");
 
         add(getToolbar());
 
@@ -207,17 +199,28 @@ profilePic.getStyle().set("border-radius","50%");
 
     private Tabs getToolbar() {
 
-        Tab tab1 = new Tab("Profile");
-        Tab tab2 = new Tab("Account");
-        Tab tab3 = new Tab("Organisation");
+        Tab tab1 = createMenuItem("Profile", ProfileSettingView.class);
+        Tab tab2 = createMenuItem("Organisation", OrganisationSettingView.class);
+        Tab tab3 = createMenuItem("Application", AppSettingView.class);
         Tabs tabs = new Tabs(tab1, tab2, tab3);
         tabs.setFlexGrowForEnclosedTabs(1);
+        tabs.setSelectedTab(tab1);
 
 
 
 
         return tabs;
     }
+
+    private Tab createMenuItem(String title, Class<? extends Component> target) {
+        RouterLink link = new RouterLink(title, target);
+        //if (icon != null) link.add(icon.create());
+
+        Tab tab = new Tab();
+        tab.add(link);
+        return tab;
+    }
+
     private Component createComponent(String mimeType, String fileName,
                                       InputStream stream) {
         if (mimeType.startsWith("text")) {

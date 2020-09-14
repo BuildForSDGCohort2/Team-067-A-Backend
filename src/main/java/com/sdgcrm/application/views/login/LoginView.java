@@ -34,7 +34,15 @@ public class LoginView extends VerticalLayout implements  BeforeEnterObserver {
     private LoginForm login = new LoginForm();
     LoginI18n i18n;
     Span successMessage = new Span();
-    public LoginView(){
+
+
+    UserService userservice;
+    @Autowired
+    PasswordEncoder encoder;
+
+    public LoginView( @Autowired
+                              UserService userservice){
+        this.userservice= userservice;
         this.i18n= createLoginI18n();
        login.setI18n(createLoginI18n());
         addClassName("login-view");
@@ -91,10 +99,6 @@ public class LoginView extends VerticalLayout implements  BeforeEnterObserver {
         return i18n;
     }
 
-    @Autowired
-    UserService userservice;
-    @Autowired
-    PasswordEncoder encoder;
 
 
 
@@ -119,9 +123,8 @@ public class LoginView extends VerticalLayout implements  BeforeEnterObserver {
 
            User validUser= userservice.findByUserToken(value);
             System.out.println(validUser.toString());;
-            validUser.setActive(1);
+            validUser.setEnabled(true);
 
-            validUser.setPassword(encoder.encode(validUser.getPassword()));
             userservice.store(validUser);
             successMessage.setText("Account verification successful");
             Notification.show("Account verification successful- "

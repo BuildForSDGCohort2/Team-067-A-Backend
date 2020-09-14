@@ -66,6 +66,7 @@ public class MainView extends AppLayout {
     UserService userservice;
     User currentUser;
     Image avatar;
+    Image logo;
 
     public MainView( @Autowired
                              UserService userservice) {
@@ -73,6 +74,7 @@ public class MainView extends AppLayout {
         currentUser= userservice.findByEmail(SecurityUtils.getLoggedinUsername());
 
         avatar=  new Image();
+        logo= new Image();
         setPrimarySection(Section.DRAWER);
         addToNavbar(true, createHeaderContent());
         menu = createMenu();
@@ -97,18 +99,24 @@ public class MainView extends AppLayout {
         layout.add(viewTitle);
         userTitle.getStyle().set("margin-right", "10px");
 
-        if(currentUser.getProfileImg()!=null){
+
+
+        if( currentUser.getProfileImg() != null  && currentUser.getProfileImg().length > 0){
+            System.out.println("showing main logo");
              updateProfileimage(currentUser.getProfileImg());
         }else{
+            System.out.println("showing default");
         avatar.setSrc("images/user.svg");
 
         }
+
+
        layout.add(avatar, userTitle);
 
         ContextMenu contextMenu = new ContextMenu(userTitle);
         contextMenu.setOpenOnClick(true);
         contextMenu.addItem("Settings",
-                e -> getUI().ifPresent(ui -> ui.navigate("Setting")));
+                e -> getUI().ifPresent(ui -> ui.navigate("setting/profile")));
         Anchor li= new Anchor("/logout", "Logout");
         li.setClassName("centered-content");
         contextMenu.add(li);
@@ -126,9 +134,18 @@ public class MainView extends AppLayout {
         HorizontalLayout logoLayout = new HorizontalLayout();
         logoLayout.setId("logo");
         logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
-        logoLayout.add(new Image("images/logo.png", "SDGCRM logo"));
 
-        logoLayout.add(new H1(currentUser.getCompanyName().toUpperCase()));
+        if(currentUser.getCompanyProfile().getProfileImg() != null  && currentUser.getCompanyProfile().getProfileImg().length > 0){
+            updateCompanyimage(currentUser.getCompanyProfile().getProfileImg());
+        }else{
+            logo.setSrc("images/logo.png");
+
+        }
+        logo.getStyle().set("border-radius","50%");
+
+        logoLayout.add(logo);
+
+        logoLayout.add(new H1(currentUser.getCompanyProfile().getName().toUpperCase()));
         layout.add(logoLayout, menu);
         return layout;
     }
@@ -211,6 +228,35 @@ public class MainView extends AppLayout {
                         reader.setInput(in);
                         avatar.setWidth(32+ "px");
                         avatar.setHeight(32+ "px");
+                    } finally {
+                        reader.dispose();
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void updateCompanyimage(byte[] bytes) {
+
+        try {
+
+
+
+            logo.getElement().setAttribute("src", new StreamResource(
+                    "sample", () -> new ByteArrayInputStream(bytes)));
+            try (ImageInputStream in = ImageIO.createImageInputStream(
+                    new ByteArrayInputStream(bytes))) {
+                final Iterator<ImageReader> readers = ImageIO
+                        .getImageReaders(in);
+                if (readers.hasNext()) {
+                    ImageReader reader = readers.next();
+                    try {
+                        reader.setInput(in);
+                        logo.setWidth(50+ "px");
+                        logo.setHeight(50+ "px");
                     } finally {
                         reader.dispose();
                     }

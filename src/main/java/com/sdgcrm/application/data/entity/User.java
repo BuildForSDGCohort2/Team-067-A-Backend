@@ -25,16 +25,10 @@ import java.util.Set;
         })
 })
 public class User{
-	@Id
-    @GeneratedValue(
-            strategy= GenerationType.AUTO,
-            generator="native"
-    )
-    @GenericGenerator(
-            name = "native",
-            strategy = "native"
-    )
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
 
     @NotBlank
     private String firstname;
@@ -50,13 +44,10 @@ public class User{
     
     private long phone;
 
-    private String location;
 
     private String theme= "dark";
 
-    private String companyName;
-
-    private int active;
+    private boolean enabled;
 
     private String userToken;
 
@@ -92,17 +83,21 @@ public class User{
     	inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+
+
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade =  CascadeType.ALL,
+            mappedBy = "user")
+    private CompanyProfile companyProfile;
+
     public User() {}
 
-    public User(@NotBlank String firstname, @NotBlank String lastname, @NotBlank @Email String email, long phone, String location,
-                String companyName, @NotBlank String companyPosition, @NotBlank @Size(min = 6, max = 100) String password, Set<Role> roles) {
+    public User(@NotBlank String firstname, @NotBlank String lastname, @NotBlank @Email String email, long phone,  @NotBlank String companyPosition, @NotBlank @Size(min = 6, max = 100) String password, Set<Role> roles) {
 
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.phone = phone;
-        this.location = location;
-        this.companyName = companyName;
         this.companyPosition = companyPosition;
         this.password = password;
         this.roles = roles;
@@ -185,30 +180,13 @@ public class User{
         this.companyPosition = companyPosition;
     }
 
-    public String getLocation() {
-        return location;
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public int getActive() {
-        return active;
-    }
-
-    public void setActive(int active) {
-        this.active = active;
-    }
-
 
     public List<Customer> getClients() {
         return client;
@@ -234,6 +212,15 @@ public class User{
         this.profileImg = profileImg;
     }
 
+
+    public CompanyProfile getCompanyProfile() {
+        return companyProfile;
+    }
+
+    public void setCompanyProfile(CompanyProfile companyProfile) {
+        this.companyProfile = companyProfile;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -242,10 +229,7 @@ public class User{
                 ", lastname='" + lastname + '\'' +
                 ", email='" + email + '\'' +
                 ", phone=" + phone +
-                ", location='" + location + '\'' +
-                ", theme='" + theme + '\'' +
-                ", companyName='" + companyName + '\'' +
-                ", active=" + active +
+                ", enabled=" + enabled +
                 ", userToken='" + userToken + '\'' +
                 ", companyPosition='" + companyPosition + '\'' +
                 ", client=" + client +

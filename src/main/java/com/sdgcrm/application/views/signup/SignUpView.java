@@ -1,8 +1,10 @@
 package com.sdgcrm.application.views.signup;
 
+import com.sdgcrm.application.data.entity.CompanyProfile;
 import com.sdgcrm.application.data.entity.Role;
 import com.sdgcrm.application.data.entity.RoleName;
 import com.sdgcrm.application.data.entity.User;
+import com.sdgcrm.application.data.service.CompanyService;
 import com.sdgcrm.application.data.service.UserService;
 import com.sdgcrm.application.email.ScheduleEmailRequest;
 import com.sdgcrm.application.repository.RoleRepository;
@@ -68,6 +70,9 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
     @Autowired
     EmailService emailservice;
 
+    @Autowired
+    CompanyService companyService;
+
     @Value("${application.base.url}")
     String baseurl;
 
@@ -79,12 +84,13 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
     /**
      * We use Spring to inject the backend into our view
      */
-    public SignUpView(UserService userservice, RoleRepository roleRepository, PasswordEncoder encoder, EmailService emailservice) {
+    public SignUpView(UserService userservice, RoleRepository roleRepository, PasswordEncoder encoder, EmailService emailservice,  CompanyService companyService) {
 
         this.userservice= userservice;
         this.roleRepository= roleRepository;
         this.encoder= encoder;
         this.emailservice=emailservice;
+        this.companyService=companyService;
         init();
         /*
          * Create the components we'll need
@@ -110,14 +116,29 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
 
 
         TextField companyNameField = new TextField("Company Name");
-        binder.forField(companyNameField).asRequired().bind(User::getCompanyName,User::setCompanyName);
 
+
+        binder.forField(companyNameField).bind(
+                user -> {
+                    if (user.getCompanyProfile() != null) {
+                        return user.getCompanyProfile().getName();
+                    }
+                    return ""; //if address is null, return empty string
+                },
+                (user, companyName) -> {
+                    if (user.getCompanyProfile() != null) {
+                        user.getCompanyProfile().setName(companyName);
+                    } else {
+                        // i.e. create a new address object
+                        CompanyProfile companyProfile = new CompanyProfile();
+                        companyProfile.setName(companyName);
+                        user.setCompanyProfile(companyProfile);
+                    }
+                });
         ComboBox<String> companyPositionField = new ComboBox<>("Company Position");
         binder.forField(companyPositionField).asRequired().bind(User::getCompanyPosition,User::setCompanyPosition);
         companyPositionField.setAllowCustomValue(false);
 
-        TextField locationField = new TextField("Location");
-        binder.forField(locationField).asRequired().bind(User::getLocation,User::setLocation);
 
         TextField phoneField = new TextField("Phone");
         binder.forField(phoneField).asRequired("Please Enter Phone Number").withConverter(new StringToLongConverter("Invalid Phone Number")).bind(User::getPhone,User::setPhone);
@@ -165,7 +186,7 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
         // logic (validation, etc.), but it allows us to configure Responsiveness from
         // Java code and its defaults looks nicer than just using a VerticalLayout.
         FormLayout formLayout = new FormLayout(image,successMessage, firstnameField, lastnameField, companyNameField, companyPositionField, passwordField1, passwordField2,
-                 emailField, phoneField,locationField, allowMarketingBox, errorMessage, submitButton, signIn);
+                 emailField, phoneField, allowMarketingBox, errorMessage, submitButton, signIn);
 
         // Restrict maximum width and center on page
         formLayout.setMaxWidth("500px");
@@ -231,6 +252,7 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
                         + binder.validate().getFieldValidationStatuses().toString());
 
                 errorMessage.setText("you have "+binder.validate().getValidationErrors().size() +" errors");
+                System.out.println(binder.validate().getBeanValidationResults().toString());
             }else{
 
 
@@ -258,17 +280,20 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
                         roles.add(userRole);
                 }
                 User user = new User();
+                CompanyProfile companyProfile= new CompanyProfile(companyNameField.getValue(), "", "", "");
 
                 user.setFirstname(firstnameField.getValue());
                 user.setLastname(lastnameField.getValue());
                 user.setEmail(emailField.getValue());
                 user.setPhone(Long.parseLong(phoneField.getValue()));
-                user.setLocation(locationField.getValue());
-                user.setCompanyName(companyNameField.getValue());
+
                 user.setCompanyPosition(companyPositionField.getValue());
                 user.setPassword(passwordEncoder.encode(passwordField2.getValue()));
                 user.setUserToken(generateVerificationString());
                 user.setRoles(roles);
+
+                user.setCompanyProfile(companyProfile);
+                companyProfile.setUser(user);
 
                 System.out.println(user.toString());
                 userservice.store(user);
