@@ -1,0 +1,156 @@
+package com.sdgcrm.application.views.asset;
+
+import com.sdgcrm.application.data.entity.Asset;
+import com.sdgcrm.application.data.entity.Customer;
+import com.sdgcrm.application.data.entity.User;
+import com.sdgcrm.application.views.customer.CustomerForm;
+import com.vaadin.flow.component.ComponentEvent;
+import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.ValidationException;
+import com.vaadin.flow.data.converter.LocalDateToDateConverter;
+import com.vaadin.flow.shared.Registration;
+
+import java.time.LocalDate;
+
+
+public class AssetForm extends FormLayout {
+
+    private Asset asset;
+    User currentUser;
+
+
+    TextField categorytf = new TextField("Equipment Category");
+    TextField nametf = new TextField("Equipment Name");
+    DatePicker purchaseDatetf;
+    TextField maintenceScheduletf = new TextField("Maintenance Schedule");
+    NumberField quantitytf = new NumberField("Quantity");
+    TextArea healthStatustf = new TextArea("Health Status");
+    TextArea purchasedBytf = new TextArea("Purchased By");
+    TextArea notestf = new TextArea("Notes");
+
+    Button save = new Button("Save");
+    Button delete = new Button("Delete");
+    Button close = new Button("Cancel");
+
+    Binder<Asset> binder = new Binder<>();
+
+    public AssetForm(User currentUser) {
+        this.currentUser = currentUser;
+        purchaseDatetf  = new DatePicker();
+
+
+
+        binder.forField(categorytf).bind(Asset::getCategory, Asset::setCategory);
+        binder.forField(nametf).bind(Asset::getName,Asset::setName);
+        binder.forField(purchaseDatetf).withConverter(new LocalDateToDateConverter()).bind(Asset::getPurchaseDate,Asset::setPurchaseDate);
+        binder.forField(maintenceScheduletf).bind(Asset::getMaintenceSchedule,Asset::setMaintenceSchedule);
+        binder.forField(quantitytf).bind(Asset::getQuantity,Asset::setQuantity);
+        binder.forField(healthStatustf).bind(Asset::getHealthStatus,Asset::setHealthStatus);
+        binder.forField(purchasedBytf).bind(Asset::getPurchasedBy,Asset::setPurchasedBy);
+        binder.forField(notestf).bind(Asset::getNotes,Asset::setNotes);
+
+        purchaseDatetf.setClearButtonVisible(true);
+        purchaseDatetf.setValue(LocalDate.now());
+
+        addClassName("customer-form");
+        getStyle().set("margin","10px");
+        add(nametf,
+                categorytf,
+                purchaseDatetf,
+                maintenceScheduletf,
+                quantitytf,
+                healthStatustf,
+                purchasedBytf,
+                notestf,
+                createButtonsLayout());
+
+
+    }
+
+    private HorizontalLayout createButtonsLayout() {
+
+        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        close.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+
+        save.addClickShortcut(Key.ENTER);
+        close.addClickShortcut(Key.ESCAPE);
+
+        save.addClickListener(event -> validateAndSave());
+        delete.addClickListener(event -> fireEvent(new AssetForm.DeleteEvent(this, asset)));
+        close.addClickListener(event -> fireEvent(new AssetForm.CloseEvent(this)));
+
+
+        binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
+        return new HorizontalLayout(save, delete, close);
+
+    }
+
+    private void validateAndSave() {
+        try {
+
+           // customer.setCompany(currentUser);
+            binder.writeBean(asset);
+            fireEvent(new AssetForm.SaveEvent(this, asset));
+        } catch (ValidationException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public static abstract class AssetFormEvent extends ComponentEvent<AssetForm> {
+        private Asset asset;
+
+        protected AssetFormEvent(AssetForm source, Asset asset) {
+            super(source, false);
+            this.asset = asset;
+        }
+
+        public Asset getAsset() {
+            return asset;
+        }
+    }
+
+    public static class SaveEvent extends AssetFormEvent{
+        SaveEvent(AssetForm source, Asset asset) {
+            super(source, asset);
+        }
+    }
+
+    public static class DeleteEvent extends AssetFormEvent {
+        DeleteEvent(AssetForm source, Asset asset) {
+            super(source, asset);
+        }
+
+    }
+
+    public static class CloseEvent extends AssetFormEvent {
+        CloseEvent(AssetForm source) {
+            super(source, null);
+        }
+    }
+
+    public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType,
+                                                                  ComponentEventListener<T> listener) {
+        return getEventBus().addListener(eventType, listener);
+    }
+
+
+
+
+    public void setAsset(Asset asset) {
+        this.asset = asset;
+        binder.readBean(asset);
+    }
+}
