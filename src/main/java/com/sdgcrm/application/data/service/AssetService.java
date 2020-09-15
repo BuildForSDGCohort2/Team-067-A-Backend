@@ -7,6 +7,7 @@ import com.sdgcrm.application.repository.AssetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -33,6 +34,19 @@ public class AssetService {
 
     public void delete(Asset asset) {
         assetRepository.delete(asset);
+    }
+
+    public List<String> getAssetCategories() {
+        return Arrays.asList("Software Assets", "Hardware Assets");
+    }
+
+    public List<String> getAssetHealthCategories() {
+        return Arrays.asList("No Status", " Normal", "Warning", "Alert");
+    }
+
+
+    public List<String> getMaintenanceSchedule() {
+        return Arrays.asList("Daily- Everyday", "Weekly- Every Week", "Monthly- Every Month", "Quarterly- Every 4 Months", "Yearly- Every Year");
     }
 
 }

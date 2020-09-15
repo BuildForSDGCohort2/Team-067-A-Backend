@@ -54,7 +54,7 @@ public class AssetView extends Div {
 
         configureGrid();
 
-        form = new AssetForm(currentUser);
+        form = new AssetForm(currentUser, assetService);
         form.addListener(AssetForm.SaveEvent.class, this::saveAsset);
         form.addListener(AssetForm.DeleteEvent.class, this::deleteAsset);
         form.addListener(AssetForm.CloseEvent.class, e -> closeEditor());

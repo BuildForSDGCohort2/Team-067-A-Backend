@@ -3,12 +3,14 @@ package com.sdgcrm.application.views.asset;
 import com.sdgcrm.application.data.entity.Asset;
 import com.sdgcrm.application.data.entity.Customer;
 import com.sdgcrm.application.data.entity.User;
+import com.sdgcrm.application.data.service.AssetService;
 import com.sdgcrm.application.views.customer.CustomerForm;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -25,16 +27,23 @@ import java.time.LocalDate;
 
 public class AssetForm extends FormLayout {
 
+    AssetService assetService;
     private Asset asset;
     User currentUser;
 
 
-    TextField categorytf = new TextField("Equipment Category");
+
+    ComboBox<String> categorytf = new ComboBox<>("Equipment Category");
+
     TextField nametf = new TextField("Equipment Name");
     DatePicker purchaseDatetf;
-    TextField maintenceScheduletf = new TextField("Maintenance Schedule");
+
+    ComboBox<String> maintenceScheduletf = new ComboBox<>("Maintenance Schedule");
+
     NumberField quantitytf = new NumberField("Quantity");
-    TextArea healthStatustf = new TextArea("Health Status");
+
+    ComboBox<String> healthStatustf = new ComboBox<>("Health Status");
+
     TextArea purchasedBytf = new TextArea("Purchased By");
     TextArea notestf = new TextArea("Notes");
 
@@ -44,15 +53,26 @@ public class AssetForm extends FormLayout {
 
     Binder<Asset> binder = new Binder<>();
 
-    public AssetForm(User currentUser) {
+    public AssetForm(User currentUser,  AssetService assetService) {
         this.currentUser = currentUser;
-        purchaseDatetf  = new DatePicker();
+        this.assetService= assetService;
+        purchaseDatetf  = new DatePicker("Purchase Date");
 
 
 
         binder.forField(categorytf).bind(Asset::getCategory, Asset::setCategory);
         binder.forField(nametf).bind(Asset::getName,Asset::setName);
         binder.forField(purchaseDatetf).withConverter(new LocalDateToDateConverter()).bind(Asset::getPurchaseDate,Asset::setPurchaseDate);
+        maintenceScheduletf.setItems(assetService.getMaintenanceSchedule());
+        maintenceScheduletf.setAllowCustomValue(false);
+
+        categorytf.setItems(assetService.getAssetCategories());
+        categorytf.setAllowCustomValue(false);
+
+        healthStatustf.setItems(assetService.getAssetHealthCategories());
+        healthStatustf.setAllowCustomValue(false);
+
+
         binder.forField(maintenceScheduletf).bind(Asset::getMaintenceSchedule,Asset::setMaintenceSchedule);
         binder.forField(quantitytf).bind(Asset::getQuantity,Asset::setQuantity);
         binder.forField(healthStatustf).bind(Asset::getHealthStatus,Asset::setHealthStatus);
