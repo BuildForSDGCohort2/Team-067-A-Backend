@@ -3,6 +3,7 @@ package com.sdgcrm.application.data.entity;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,7 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Entity
-public class CompanyProfile {
+@EntityListeners(AuditingEntityListener.class)
+public class CompanyProfile extends Auditable<String>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

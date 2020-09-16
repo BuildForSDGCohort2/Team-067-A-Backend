@@ -96,7 +96,7 @@ public class CustomerView extends Div {
     private void configureGrid() {
         grid.addClassName("customer-grid");
         grid.setSizeFull();
-        grid.removeColumnByKey("company");
+        excludeColumns();
         grid.addSelectionListener(e -> closeEditor());
 
 
@@ -105,6 +105,14 @@ public class CustomerView extends Div {
                 editCustomer(event.getValue()));
 
 
+    }
+
+    public void excludeColumns() {
+        grid.removeColumnByKey("company");
+        grid.removeColumnByKey("createdBy");
+        grid.removeColumnByKey("createdDate");
+        grid.removeColumnByKey("lastModifiedBy");
+        grid.removeColumnByKey("lastModifiedDate");
     }
 
     private void editCustomer(Customer customer) {

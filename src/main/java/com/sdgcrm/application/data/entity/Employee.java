@@ -1,11 +1,13 @@
 package com.sdgcrm.application.data.entity;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
 @Entity
-public class Employee {
+@EntityListeners(AuditingEntityListener.class)
+public class Employee extends Auditable<String> {
 
     @Id
     @GeneratedValue(

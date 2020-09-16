@@ -2,13 +2,15 @@ package com.sdgcrm.application.data.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @Entity
-public class Customer {
+@EntityListeners(AuditingEntityListener.class)
+public class Customer extends Auditable<String>{
 
     @Id
     @GeneratedValue(

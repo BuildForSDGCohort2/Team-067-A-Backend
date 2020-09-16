@@ -1,7 +1,9 @@
 package com.sdgcrm.application.views.asset;
 
+
 import com.sdgcrm.application.data.entity.Asset;
 import com.sdgcrm.application.data.entity.Customer;
+import com.sdgcrm.application.data.entity.HealthStatus;
 import com.sdgcrm.application.data.entity.User;
 import com.sdgcrm.application.data.service.AssetService;
 import com.sdgcrm.application.data.service.CustomerService;
@@ -24,6 +26,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -67,8 +70,41 @@ public class AssetView extends Div {
         content.setSizeFull();
 
         add(getTabsbar(),getToolbar(), content);
+        grid.addColumn(new ComponentRenderer<>(asset -> {
+
+            System.out.println("Health -> "+ asset.getHealthStatus());
+
+            Icon icon = new Icon();
+
+
+            switch(asset.getHealthStatus()) {
+                case "No Status":
+                    icon= VaadinIcon.MEH_O.create();
+
+                    break;
+                case "Warning":
+                    icon= VaadinIcon.WARNING.create();
+                    icon.setColor("yellow");
+                    break;
+                case "Normal":
+                    icon= VaadinIcon.SMILEY_O.create();
+                    icon.setColor("green");
+                    break;
+                case "Alert":
+                    icon= VaadinIcon.FROWN_O.create();
+                    icon.setColor("red");
+                    break;
+
+                default:
+
+            }
+            return icon;
+        })).setHeader("Health");
         updateList();
         closeEditor();
+
+
+
 
 
 
@@ -80,11 +116,20 @@ public class AssetView extends Div {
         grid.setSizeFull();
         grid.addSelectionListener(e -> closeEditor());
 
-        grid.removeColumnByKey("company");
+       excludeColumns();
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
          grid.asSingleSelect().addValueChangeListener(event ->
                 editAsset(event.getValue()));
 
+    }
+
+
+    public void excludeColumns() {
+        grid.removeColumnByKey("company");
+        grid.removeColumnByKey("createdBy");
+        grid.removeColumnByKey("createdDate");
+        grid.removeColumnByKey("lastModifiedBy");
+        grid.removeColumnByKey("lastModifiedDate");
     }
 
     private void editAsset(Asset asset) {
@@ -97,6 +142,7 @@ public class AssetView extends Div {
         }
     }
     private void updateList(){
+
         grid.setItems(assetService.findAll(filterText.getValue(), currentUser));
 
     }

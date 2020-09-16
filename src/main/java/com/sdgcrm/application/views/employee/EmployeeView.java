@@ -84,7 +84,7 @@ public class EmployeeView  extends Div{
     private void configureGrid() {
         grid.addClassName("customer-grid");
         grid.setSizeFull();
-        grid.removeColumnByKey("employer");
+       excludeColumns();
         grid.addSelectionListener(e -> closeEditor());
 
 
@@ -93,6 +93,14 @@ public class EmployeeView  extends Div{
                 editEmployee(event.getValue()));
 
 
+    }
+
+    public void excludeColumns() {
+        grid.removeColumnByKey("employer");
+        grid.removeColumnByKey("createdBy");
+        grid.removeColumnByKey("createdDate");
+        grid.removeColumnByKey("lastModifiedBy");
+        grid.removeColumnByKey("lastModifiedDate");
     }
 
     private void editEmployee(Employee employee) {

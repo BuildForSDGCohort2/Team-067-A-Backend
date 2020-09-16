@@ -85,8 +85,8 @@ public class ProductView  extends Div {
     private void configureGrid() {
         grid.addClassName("customer-grid");
         grid.setSizeFull();
-        grid.removeColumnByKey("company");
-        grid.removeColumnByKey("id");
+      excludeColumns();
+
         grid.addSelectionListener(e -> closeEditor());
 
 
@@ -95,6 +95,15 @@ public class ProductView  extends Div {
                 editProduct(event.getValue()));
 
 
+    }
+
+    public void excludeColumns() {
+        grid.removeColumnByKey("id");
+        grid.removeColumnByKey("company");
+        grid.removeColumnByKey("createdBy");
+        grid.removeColumnByKey("createdDate");
+        grid.removeColumnByKey("lastModifiedBy");
+        grid.removeColumnByKey("lastModifiedDate");
     }
 
     private void editProduct(Product product) {

@@ -3,6 +3,7 @@ package com.sdgcrm.application.data.entity;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.NaturalId;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -18,7 +19,8 @@ import java.util.Set;
             "email"
         })
 })
-public class User{
+@EntityListeners(AuditingEntityListener.class)
+public class User extends  Auditable<String>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

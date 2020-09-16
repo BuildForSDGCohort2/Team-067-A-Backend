@@ -1,11 +1,13 @@
 package com.sdgcrm.application.data.entity;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
 @Entity
-public class Product {
+@EntityListeners(AuditingEntityListener.class)
+public class Product extends Auditable<String>{
 
     @Id
     @GeneratedValue(
@@ -97,4 +99,7 @@ public class Product {
     public void setCompany(User company) {
         this.company = company;
     }
+
+
+
 }
