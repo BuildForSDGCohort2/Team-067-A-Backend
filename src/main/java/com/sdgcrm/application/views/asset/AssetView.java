@@ -5,6 +5,7 @@ import com.sdgcrm.application.data.entity.Customer;
 import com.sdgcrm.application.data.entity.User;
 import com.sdgcrm.application.data.service.AssetService;
 import com.sdgcrm.application.data.service.CustomerService;
+import com.sdgcrm.application.data.service.EmployeeService;
 import com.sdgcrm.application.data.service.UserService;
 import com.sdgcrm.application.security.SecurityUtils;
 import com.sdgcrm.application.views.customer.CustomerForm;
@@ -37,16 +38,17 @@ public class AssetView extends Div {
     AssetService assetService;
     UserService userService;
     User currentUser;
+    EmployeeService employeeService;
 
     AssetForm form;
     Grid<Asset> grid= new Grid<>(Asset.class);
     private TextField filterText = new TextField();
 
-    public AssetView(@Autowired AssetService assetService, @Autowired UserService userService) {
+    public AssetView(@Autowired AssetService assetService, @Autowired UserService userService, @Autowired  EmployeeService employeeService) {
         this.assetService= assetService;
         this.userService= userService;
         this.currentUser= userService.findByEmail(SecurityUtils.getLoggedinUsername());
-
+        this.employeeService= employeeService;
 
 
         addClassName("list-view");
@@ -54,7 +56,7 @@ public class AssetView extends Div {
 
         configureGrid();
 
-        form = new AssetForm(currentUser, assetService);
+        form = new AssetForm(currentUser, assetService, userService, employeeService);
         form.addListener(AssetForm.SaveEvent.class, this::saveAsset);
         form.addListener(AssetForm.DeleteEvent.class, this::deleteAsset);
         form.addListener(AssetForm.CloseEvent.class, e -> closeEditor());
@@ -68,6 +70,9 @@ public class AssetView extends Div {
         updateList();
         closeEditor();
 
+
+
+
     }
 
     private void configureGrid() {
@@ -75,9 +80,9 @@ public class AssetView extends Div {
         grid.setSizeFull();
         grid.addSelectionListener(e -> closeEditor());
 
-
+        grid.removeColumnByKey("company");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
-     grid.asSingleSelect().addValueChangeListener(event ->
+         grid.asSingleSelect().addValueChangeListener(event ->
                 editAsset(event.getValue()));
 
     }
@@ -92,7 +97,7 @@ public class AssetView extends Div {
         }
     }
     private void updateList(){
-        grid.setItems(assetService.findAll());
+        grid.setItems(assetService.findAll(filterText.getValue(), currentUser));
 
     }
     private Tabs getTabsbar() {

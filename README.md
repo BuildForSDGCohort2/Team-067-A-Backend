@@ -19,6 +19,11 @@
 - Customer/Client Management
 - Asset Management [TODO]
 - In-App Messaging [TODO]
+
+
+ERD Sketch Developed using <a href="https://www.jetbrains.com/idea/">Intellij IDE</a>
+<img src="https://res.cloudinary.com/moversng/image/upload/v1600215685/entityManagerFactory_EntityManagerFactoryBuilder_egiumi.png" />
+
 ````
 CRM
 

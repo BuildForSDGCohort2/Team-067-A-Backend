@@ -1,8 +1,5 @@
 package com.sdgcrm.application.data.entity;
 
-import com.sun.mail.handlers.image_gif;
-import com.vaadin.flow.component.html.Image;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.NaturalId;
@@ -11,10 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.io.ByteArrayOutputStream;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -58,19 +52,6 @@ public class User{
     
     @NotBlank
     private String companyPosition;
-
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy="company")
-    private List<Customer> client = new LinkedList<>();
-
-
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy="company")
-    private List<Product> product  = new LinkedList<>();
-
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy="employer")
-    private List<Employee> employer = new LinkedList<>();
 
     @NotBlank
     @Size(min=6, max = 100)
@@ -188,15 +169,7 @@ public class User{
         this.enabled = enabled;
     }
 
-    public List<Customer> getClients() {
-        return client;
-    }
-
-    public void setClients(List<Customer> customers) {
-        this.client = customers;
-    }
-
-    public String getUserToken() {
+      public String getUserToken() {
         return userToken;
     }
 
@@ -231,12 +204,14 @@ public class User{
                 ", phone=" + phone +
                 ", enabled=" + enabled +
                 ", userToken='" + userToken + '\'' +
-                ", companyPosition='" + companyPosition + '\'' +
-                ", client=" + client +
-                ", employer=" + employer +
+                ", companyPosition='" + companyPosition + '\''+
+
                 ", password='" + password + '\'' +
                 ", roles=" + roles +
                 '}';
+
     }
+
+
 
 }

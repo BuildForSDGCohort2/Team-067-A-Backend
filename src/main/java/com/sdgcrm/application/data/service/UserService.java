@@ -37,6 +37,10 @@ public class UserService implements Serializable {
         return Arrays.asList("Owner");
     }
 
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
 
     public boolean existsByEmail(String email) {
         return  userRepository.existsByEmail(email);

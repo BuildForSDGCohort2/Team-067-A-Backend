@@ -17,14 +17,15 @@ public class AssetService {
     AssetRepository assetRepository;
 
 
-    public List<Asset> findAll() {
+    public List<Asset> findAll(String stringFilter, User loggedinuser) {
 
-        return assetRepository.findAll();
-//        if (stringFilter == null || stringFilter.isEmpty()) {
-//            return employeeRepository.findByEmployer(currentUser);
-//        } else {
-//            return employeeRepository.search(stringFilter, currentUser.getId());
-//        }
+
+        if (stringFilter == null || stringFilter.isEmpty()) {
+            return assetRepository.findByCompany(loggedinuser.getCompanyProfile());
+        } else {
+            return assetRepository.search(stringFilter, loggedinuser.getCompanyProfile().getId());
+        }
+
     }
 
 
@@ -37,7 +38,7 @@ public class AssetService {
     }
 
     public List<String> getAssetCategories() {
-        return Arrays.asList("Software Assets", "Hardware Assets");
+        return Arrays.asList("Software Asset", "Hardware Asset");
     }
 
     public List<String> getAssetHealthCategories() {
@@ -46,7 +47,7 @@ public class AssetService {
 
 
     public List<String> getMaintenanceSchedule() {
-        return Arrays.asList("Daily- Everyday", "Weekly- Every Week", "Monthly- Every Month", "Quarterly- Every 4 Months", "Yearly- Every Year");
+        return Arrays.asList("Daily", "Weekly", "Monthly", "Quarterly", "Yearly");
     }
 
 }

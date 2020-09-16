@@ -2,10 +2,7 @@ package com.sdgcrm.application.data.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -30,6 +27,11 @@ public class Asset {
     private String healthStatus;
     private String purchasedBy;
 
+
+
+    @ManyToOne
+    @JoinColumn(name="client_id")
+    private CompanyProfile company;
 
 
 
@@ -95,5 +97,14 @@ public class Asset {
 
     public void setPurchasedBy(String purchasedBy) {
         this.purchasedBy = purchasedBy;
+    }
+
+
+    public CompanyProfile getCompany() {
+        return company;
+    }
+
+    public void setCompany(CompanyProfile company) {
+        this.company = company;
     }
 }

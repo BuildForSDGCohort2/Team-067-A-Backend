@@ -4,7 +4,10 @@ import com.sdgcrm.application.data.entity.Asset;
 import com.sdgcrm.application.data.entity.Customer;
 import com.sdgcrm.application.data.entity.User;
 import com.sdgcrm.application.data.service.AssetService;
+import com.sdgcrm.application.data.service.EmployeeService;
+import com.sdgcrm.application.data.service.UserService;
 import com.sdgcrm.application.views.customer.CustomerForm;
+import com.vaadin.componentfactory.Autocomplete;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
@@ -13,21 +16,28 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.ui.*;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.converter.LocalDateToDateConverter;
 import com.vaadin.flow.shared.Registration;
+import org.vaadin.addons.autocomplete.AutocompleteExtension;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class AssetForm extends FormLayout {
 
     AssetService assetService;
+    UserService userService;
+    EmployeeService employeeService;
     private Asset asset;
     User currentUser;
 
@@ -44,8 +54,10 @@ public class AssetForm extends FormLayout {
 
     ComboBox<String> healthStatustf = new ComboBox<>("Health Status");
 
-    TextArea purchasedBytf = new TextArea("Purchased By");
+
     TextArea notestf = new TextArea("Notes");
+
+    Autocomplete purchasedBytf = new Autocomplete(5);
 
     Button save = new Button("Save");
     Button delete = new Button("Delete");
@@ -53,9 +65,11 @@ public class AssetForm extends FormLayout {
 
     Binder<Asset> binder = new Binder<>();
 
-    public AssetForm(User currentUser,  AssetService assetService) {
+    public AssetForm(User currentUser,  AssetService assetService,   UserService userService, EmployeeService employeeService) {
         this.currentUser = currentUser;
         this.assetService= assetService;
+        this.userService= userService;
+        this.employeeService= employeeService;
         purchaseDatetf  = new DatePicker("Purchase Date");
 
 
@@ -95,6 +109,21 @@ public class AssetForm extends FormLayout {
                 createButtonsLayout());
 
 
+
+
+
+        purchasedBytf.addChangeListener(event -> {
+            String text = event.getValue();
+            purchasedBytf.setOptions(findOptions(text));
+        });
+
+        purchasedBytf.setLabel("Purchased By");
+        purchasedBytf.setPlaceholder("Enter Name...");
+
+    }
+
+    private List<String> findOptions(final String text) {
+        return employeeService.findAll(text, currentUser).stream().map(employee -> employee.getName()).collect(Collectors.toList());
     }
 
     private HorizontalLayout createButtonsLayout() {
@@ -119,7 +148,7 @@ public class AssetForm extends FormLayout {
     private void validateAndSave() {
         try {
 
-           // customer.setCompany(currentUser);
+            asset.setCompany(currentUser.getCompanyProfile());
             binder.writeBean(asset);
             fireEvent(new AssetForm.SaveEvent(this, asset));
         } catch (ValidationException e) {

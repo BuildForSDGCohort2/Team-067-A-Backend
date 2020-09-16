@@ -152,6 +152,13 @@
         </dependency>
 
 
+        <dependency>
+            <groupId>com.vaadin.componentfactory</groupId>
+            <artifactId>autocomplete</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+
+
 
 
 
@@ -234,6 +241,8 @@
                     <artifactId>flow-server-production-mode</artifactId>
                 </dependency>
             </dependencies>
+
+
 
             <build>
                 <plugins>

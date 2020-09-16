@@ -1,8 +1,13 @@
 package com.sdgcrm.application.data.entity;
 
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity
 public class CompanyProfile {
@@ -41,6 +46,27 @@ public class CompanyProfile {
     private String instagram="";
 
     private long phone;
+
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy="company")
+    private List<Customer> client = new LinkedList<>();
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy="company")
+    private List<Product> product  = new LinkedList<>();
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy="employer")
+    private List<Employee> employer = new LinkedList<>();
+
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy="company")
+    private List<Asset> properties = new LinkedList<>();
+
+
+
 
     public User getUser() {
         return user;
@@ -132,6 +158,23 @@ public class CompanyProfile {
 
     public CompanyProfile() {
 
+    }
+
+
+    public List<Asset> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(List<Asset> properties) {
+        this.properties = properties;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
 
