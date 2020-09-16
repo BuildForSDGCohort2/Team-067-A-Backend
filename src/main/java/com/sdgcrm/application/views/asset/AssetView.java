@@ -57,19 +57,6 @@ public class AssetView extends Div {
         addClassName("list-view");
         setSizeFull();
 
-        configureGrid();
-
-        form = new AssetForm(currentUser, assetService, userService, employeeService);
-        form.addListener(AssetForm.SaveEvent.class, this::saveAsset);
-        form.addListener(AssetForm.DeleteEvent.class, this::deleteAsset);
-        form.addListener(AssetForm.CloseEvent.class, e -> closeEditor());
-
-
-        Div content = new Div(grid, form);
-        content.addClassName("content");
-        content.setSizeFull();
-
-        add(getTabsbar(),getToolbar(), content);
         grid.addColumn(new ComponentRenderer<>(asset -> {
 
             System.out.println("Health -> "+ asset.getHealthStatus());
@@ -96,10 +83,26 @@ public class AssetView extends Div {
                     break;
 
                 default:
-
+                    icon= VaadinIcon.SMILEY_O.create();
+                    icon.setColor("green");
+                    break;
             }
             return icon;
         })).setHeader("Health");
+        configureGrid();
+
+        form = new AssetForm(currentUser, assetService, userService, employeeService);
+        form.addListener(AssetForm.SaveEvent.class, this::saveAsset);
+        form.addListener(AssetForm.DeleteEvent.class, this::deleteAsset);
+        form.addListener(AssetForm.CloseEvent.class, e -> closeEditor());
+
+
+        Div content = new Div(grid, form);
+        content.addClassName("content");
+        content.setSizeFull();
+
+        add(getTabsbar(),getToolbar(), content);
+
         updateList();
         closeEditor();
 

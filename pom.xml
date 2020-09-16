@@ -152,11 +152,6 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>com.vaadin.componentfactory</groupId>
-            <artifactId>autocomplete</artifactId>
-            <version>2.2.0</version>
-        </dependency>
 
 
 

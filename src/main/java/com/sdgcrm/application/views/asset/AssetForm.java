@@ -6,8 +6,6 @@ import com.sdgcrm.application.data.entity.User;
 import com.sdgcrm.application.data.service.AssetService;
 import com.sdgcrm.application.data.service.EmployeeService;
 import com.sdgcrm.application.data.service.UserService;
-import com.sdgcrm.application.views.customer.CustomerForm;
-import com.vaadin.componentfactory.Autocomplete;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
@@ -56,7 +54,7 @@ public class AssetForm extends FormLayout {
 
     TextArea notestf = new TextArea("Notes");
 
-    Autocomplete purchasedBytf = new Autocomplete(5);
+    TextField purchasedBytf = new TextField("Purchased By");
 
     Button save = new Button("Save");
     Button delete = new Button("Delete");
@@ -111,10 +109,7 @@ public class AssetForm extends FormLayout {
 
 
 
-        purchasedBytf.addChangeListener(event -> {
-            String text = event.getValue();
-            purchasedBytf.setOptions(findOptions(text));
-        });
+
 
         purchasedBytf.setLabel("Purchased By");
         purchasedBytf.setPlaceholder("Enter Name...");
