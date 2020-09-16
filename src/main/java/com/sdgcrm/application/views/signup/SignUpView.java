@@ -36,9 +36,12 @@ import com.vaadin.flow.data.validator.EmailValidator;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -302,6 +305,7 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
                 user.setUserToken(generateVerificationString());
                 user.setRoles(roles);
 
+
                 user.setCompanyProfile(companyProfile);
                 companyProfile.setUser(user);
 
@@ -324,8 +328,10 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
 
                 emailservice.scheduleEmail(welcomemail);
 
-                showSuccessNotification(msg);
 
+
+                getUI().ifPresent(ui -> ui.navigate("Login"));
+                showSuccessNotification(msg);
                 init();
             }
 
@@ -350,7 +356,7 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
      * We call this method when form submission has succeeded
      */
     public void showSuccessNotification(String message){
-        Notification notification = Notification.show(message, 3000, Notification.Position.BOTTOM_END);
+        Notification notification = Notification.show(message, 15000, Notification.Position.BOTTOM_END);
         notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 
     }

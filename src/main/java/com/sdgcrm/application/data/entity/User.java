@@ -73,7 +73,7 @@ public class User extends  Auditable<String>{
             mappedBy = "user")
     private CompanyProfile companyProfile;
 
-    public User() {}
+
 
     public User(@NotBlank String firstname, @NotBlank String lastname, @NotBlank @Email String email, long phone,  @NotBlank String companyPosition, @NotBlank @Size(min = 6, max = 100) String password, Set<Role> roles) {
 
@@ -214,6 +214,7 @@ public class User extends  Auditable<String>{
 
     }
 
+    public User() {
 
-
+    }
 }
