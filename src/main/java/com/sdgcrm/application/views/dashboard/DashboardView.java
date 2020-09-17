@@ -17,8 +17,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Route(value = "Dashboard", layout = MainView.class)
-@PageTitle("Dashboard")
+@Route(value = "dashboard", layout = MainView.class)
+@PageTitle("dashboard")
 @CssImport("./styles/shared-styles.css")
 public class DashboardView extends Div {
 

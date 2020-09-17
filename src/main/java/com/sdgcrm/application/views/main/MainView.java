@@ -169,7 +169,7 @@ public class MainView extends AppLayout {
                 new RouterLink("Customers ", CustomerView.class),
                 new RouterLink("Order / Deal ", DealView.class),
                 new RouterLink("Inventory Asset ", AssetView.class),
-                new RouterLink("Account ", HelloView.class),
+
             new RouterLink("About", AboutView.class),
         };
         return Arrays.stream(links).map(MainView::createTab).toArray(Tab[]::new);

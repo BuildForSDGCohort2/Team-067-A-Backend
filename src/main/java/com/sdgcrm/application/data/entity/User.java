@@ -19,8 +19,7 @@ import java.util.Set;
             "email"
         })
 })
-@EntityListeners(AuditingEntityListener.class)
-public class User extends  Auditable<String>{
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
