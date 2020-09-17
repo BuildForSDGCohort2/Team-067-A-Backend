@@ -22,7 +22,7 @@
 
 
 ERD Sketch Developed using <a href="https://www.jetbrains.com/idea/">Intellij IDE</a>
-<img src="https://res.cloudinary.com/moversng/image/upload/v1600215685/entityManagerFactory_EntityManagerFactoryBuilder_egiumi.png" />
+<img src="https://res.cloudinary.com/moversng/image/upload/v1600375241/entityManagerFactory_EntityManagerFactoryBuilder_h3sd7a.png" />
 
 ````
 CRM
