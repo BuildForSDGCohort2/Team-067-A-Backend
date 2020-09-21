@@ -39,6 +39,11 @@ public class Product extends Auditable<String>{
     private User company;
 
 
+    @ManyToOne
+    @JoinColumn(name="invoice_id")
+    private Product invoices;
+
+
 
 
     public String getName() {
@@ -100,6 +105,11 @@ public class Product extends Auditable<String>{
         this.company = company;
     }
 
+    public Product getInvoices() {
+        return invoices;
+    }
 
-
+    public void setInvoices(Product invoices) {
+        this.invoices = invoices;
+    }
 }

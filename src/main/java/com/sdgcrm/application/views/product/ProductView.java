@@ -100,6 +100,7 @@ public class ProductView  extends Div {
     public void excludeColumns() {
         grid.removeColumnByKey("id");
         grid.removeColumnByKey("company");
+        grid.removeColumnByKey("invoices");
         grid.removeColumnByKey("createdBy");
         grid.removeColumnByKey("createdDate");
         grid.removeColumnByKey("lastModifiedBy");

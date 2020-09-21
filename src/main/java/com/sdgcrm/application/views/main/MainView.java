@@ -14,6 +14,8 @@ import com.sdgcrm.application.views.customer.CustomerView;
 import com.sdgcrm.application.views.dashboard.DashboardView;
 import com.sdgcrm.application.views.deal.DealView;
 import com.sdgcrm.application.views.employee.EmployeeView;
+import com.sdgcrm.application.views.invoice.InvoiceView;
+import com.sdgcrm.application.views.messaging.MessagingView;
 import com.sdgcrm.application.views.product.ProductView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
@@ -22,11 +24,7 @@ import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.dependency.JsModule;
-import com.vaadin.flow.component.details.Details;
-import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.html.*;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -41,9 +39,6 @@ import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 
-import com.sdgcrm.application.views.main.MainView;
-import com.sdgcrm.application.views.hello.HelloView;
-import com.sdgcrm.application.views.about.AboutView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.imageio.ImageIO;
@@ -167,10 +162,12 @@ public class MainView extends AppLayout {
                 new RouterLink("Product", ProductView.class),
                 new RouterLink("Staffs", EmployeeView.class),
                 new RouterLink("Customers ", CustomerView.class),
-                new RouterLink("Order / Deal ", DealView.class),
+                new RouterLink("Order", DealView.class),
+                new RouterLink("Deal", DealView.class),
                 new RouterLink("Inventory Asset ", AssetView.class),
+                new RouterLink("Messaging ", MessagingView.class),
+                new RouterLink("Invoices ", InvoiceView.class),
 
-            new RouterLink("About", AboutView.class),
         };
         return Arrays.stream(links).map(MainView::createTab).toArray(Tab[]::new);
     }

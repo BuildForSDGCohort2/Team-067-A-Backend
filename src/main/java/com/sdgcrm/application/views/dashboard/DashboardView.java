@@ -15,9 +15,11 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Route(value = "dashboard", layout = MainView.class)
+@RouteAlias(value = "", layout = MainView.class)
 @PageTitle("dashboard")
 @CssImport("./styles/shared-styles.css")
 public class DashboardView extends Div {

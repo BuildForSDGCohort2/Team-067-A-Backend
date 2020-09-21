@@ -40,6 +40,16 @@ public class  CustomerService implements Serializable {
 
     }
 
+    public List<Customer> findAllNames(String stringFilter, User loggedinuser){
+
+        if (stringFilter == null || stringFilter.isEmpty()) {
+            return customerRepository.findByCompany(loggedinuser);
+        } else {
+            return customerRepository.search(stringFilter, loggedinuser.getId());
+        }
+
+    }
+
     public void delete(Customer customer) {
         customerRepository.delete(customer);
     }

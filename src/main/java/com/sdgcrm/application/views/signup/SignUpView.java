@@ -223,19 +223,6 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
 
 
 
-//        // Only ask for email address if the user wants marketing emails
-//        allowMarketingBox.addValueChangeListener(e -> {
-//
-//            // show or hide depending on the checkbox
-//            emailField.setVisible(allowMarketingBox.getValue());
-//
-//            // Additionally, remove the input if the user decides not to allow emails. This
-//            // way any input that ends up hidden on the page won't end up in the bean when
-//            // saved.
-//            if (!allowMarketingBox.getValue()) {
-//                emailField.setValue("");
-//            }
-//        });
 
         passwordField2.addValueChangeListener(e -> {
              enablePasswordValidation = true;
@@ -376,10 +363,7 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
      */
     private ValidationResult passwordValidator(String pass1 ) {
 
-        /*
-         * Just a simple length check. A real version should check for password
-         * complexity as well!
-         */
+
         if (pass1 == null || pass1.length() < 8) {
             return ValidationResult.error("Password should be at least 8 characters long");
         }

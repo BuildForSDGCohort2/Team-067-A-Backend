@@ -102,5 +102,8 @@ public class Customer extends Auditable<String>{
     }
 
 
-
+    @Override
+    public String toString() {
+        return fullName;
+    }
 }
