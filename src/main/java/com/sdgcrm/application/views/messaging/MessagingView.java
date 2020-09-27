@@ -8,10 +8,8 @@ import com.sdgcrm.application.security.SecurityUtils;
 import com.sdgcrm.application.service.EmailService;
 import com.sdgcrm.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
@@ -49,12 +47,15 @@ public class MessagingView extends Div {
 
 
     Button save = new Button("Send Message");
+
+    Button preview = new Button("Preview Message");
     private TextField filterText = new TextField();
     RecepientsForm recepientsForm;
+    MessagePreviewForm messagePreviewForm;
 
 
     FormLayout grid= new FormLayout();
-    Div pdf= new Div();
+
 
     Binder<Recepient> binder = new Binder<>();
 
@@ -77,19 +78,18 @@ public class MessagingView extends Div {
         configureGrid();
 
         recepientsForm = new RecepientsForm(customerService, currentUser);
-
+        messagePreviewForm = new MessagePreviewForm();
 
         recepientsForm.addListener(RecepientsForm.CloseEvent.class, e -> closeEditor());
         recepientsForm.addListener(RecepientsForm.SaveEvent.class, this::saveProduct);
 
+
         messageBodyTF.setHeight("200px");
-        pdf.addClassName("messagetemplateviewer");
-        pdf.getStyle().set("display","none");
-        pdf.getStyle().set("background-color", "white");
-        pdf.getStyle().set("width", "50%");
+
+        messagePreviewForm.addListener(MessagePreviewForm.CloseEvent.class, e -> closeEditor());
 
 
-        Div content = new Div( grid,pdf, recepientsForm);
+        Div content = new Div( grid, recepientsForm, messagePreviewForm);
 
 
         content.addClassName("content");
@@ -147,17 +147,25 @@ public class MessagingView extends Div {
 
         recepientsForm.setRecepient(null);
         recepientsForm.setVisible(false);
+        messagePreviewForm.setRecepient(null);
+        messagePreviewForm.setVisible(false);
         removeClassName("editing");
-        pdf.setVisible(true);
+        removeClassName("previewing");
+
+
     }
+
 
     private Component createButtonsLayout() {
 
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        save.setWidthFull();
 
-        return new HorizontalLayout(save);
+        save.setWidthFull();
+        preview.addClickListener(click -> previewMessage(new Recepient()));
+
+        preview.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+        return new HorizontalLayout(save, preview);
     }
 
     private HorizontalLayout getToolbar() {
@@ -177,6 +185,21 @@ public class MessagingView extends Div {
         return toolbar;
     }
 
+    private void previewMessage(Recepient recepient) {
+
+        if (recepient == null) {
+            System.out.println("recipient is null");
+            closeEditor();
+        } else {
+            recepientsForm.setRecepient(null);
+            recepientsForm.setVisible(false);
+            messagePreviewForm.setRecepient(recepient);
+            messagePreviewForm.setVisible(true);
+            addClassName("editing");
+
+        }
+    }
+
     private void selectRecepient() {
         System.out.println("selecting recepients");
         editRecepient(new Recepient());
@@ -194,9 +217,10 @@ public class MessagingView extends Div {
             recepientsForm.setRecepient(recepient);
             recepientsForm.setVisible(true);
             addClassName("editing");
-            pdf.setVisible(false);
+
         }
     }
+
 
     private void configureGrid() {
         grid.addClassName("customer-grid");

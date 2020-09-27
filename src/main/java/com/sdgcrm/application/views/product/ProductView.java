@@ -83,8 +83,9 @@ public class ProductView  extends Div {
     }
 
     private void configureGrid() {
+
         grid.addClassName("customer-grid");
-        grid.setSizeFull();
+
       excludeColumns();
 
         grid.addSelectionListener(e -> closeEditor());
@@ -152,10 +153,11 @@ public class ProductView  extends Div {
     }
 
 
+    public Grid<Product> getGrid() {
+        return grid;
+    }
 
-
-
-
-
-
+    public void setGrid(Grid<Product> grid) {
+        this.grid = grid;
+    }
 }

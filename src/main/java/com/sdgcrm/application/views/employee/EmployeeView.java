@@ -83,7 +83,7 @@ public class EmployeeView  extends Div{
 
     private void configureGrid() {
         grid.addClassName("customer-grid");
-        grid.setSizeFull();
+
        excludeColumns();
         grid.addSelectionListener(e -> closeEditor());
 

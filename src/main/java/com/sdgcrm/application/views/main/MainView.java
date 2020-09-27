@@ -25,6 +25,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -121,6 +122,7 @@ public class MainView extends AppLayout {
 
     private Component createDrawerContent(Tabs menu) {
         VerticalLayout layout = new VerticalLayout();
+
         layout.setSizeFull();
         layout.setPadding(false);
         layout.setSpacing(false);
@@ -128,6 +130,7 @@ public class MainView extends AppLayout {
         layout.setAlignItems(FlexComponent.Alignment.STRETCH);
         HorizontalLayout logoLayout = new HorizontalLayout();
         logoLayout.setId("logo");
+
         logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
 
         if(currentUser.getCompanyProfile().getProfileImg() != null  && currentUser.getCompanyProfile().getProfileImg().length > 0){
@@ -156,17 +159,97 @@ public class MainView extends AppLayout {
 
     private Component[] createMenuItems() {
 
+            Span producttxt= new Span("Product");
+            Span dashboardtxt= new Span("Dashboard");
+            Span employeetxt= new Span("Employee");
+            Span customertxt= new Span("Customer");
+            Span dealtxt= new Span("Deal");
+            Span ordertxt= new Span("Order");
+            Span  inventorytxt= new Span("Inventory");
+            Span  messagetxt= new Span("  Message");
+            Span  invoicetxt= new Span("Invoice");
+
+            Image dashboardimg= new Image();
+            dashboardimg.setSrc("icons/appbar.app.svg");
+            dashboardimg.addClassName("icon");
+
+        Image productimg= new Image();
+        productimg.setSrc("icons/appbar.box.svg");
+        productimg.addClassName("icon");
+
+        Image employeeimg= new Image();
+        employeeimg.setSrc("icons/appbar.people.multiple.svg");
+        employeeimg.addClassName("icon");
+
+        Image customerimg= new Image();
+        customerimg.setSrc("icons/appbar.group.svg");
+        customerimg.addClassName("icon");
+
+        Image orderimg= new Image();
+        orderimg.setSrc("icons/appbar.shopping.svg");
+        orderimg.addClassName("icon");
+
+        Image dealimg= new Image();
+        dealimg.setSrc("icons/appbar.thumbs.up.svg");
+        dealimg.addClassName("icon");
+
+        Image inventoryimg= new Image();
+        inventoryimg.setSrc("icons/appbar.tools.svg");
+        inventoryimg.addClassName("icon");
+
+        Image messageimg= new Image();
+        messageimg.setSrc("icons/appbar.message.send.svg");
+        messageimg.addClassName("icon");
+
+
+        Image invoiceimg= new Image();
+        invoiceimg.setSrc("icons/appbar.book.list.svg");
+        invoiceimg.addClassName("icon");
+
+        RouterLink dashboardLink = new RouterLink("", DashboardView.class);
+         dashboardLink.getElement().appendChild(dashboardimg.getElement()).appendChild(dashboardtxt.getElement());
+
+
+        RouterLink productLink = new RouterLink("", ProductView.class);
+        productLink.getElement().appendChild(productimg.getElement()).appendChild(producttxt.getElement());
+
+
+        RouterLink employeeLink = new RouterLink("", EmployeeView.class);
+        employeeLink.getElement().appendChild(employeeimg.getElement()).appendChild(employeetxt.getElement());
+
+
+        RouterLink customerLink = new RouterLink("", CustomerView.class);
+        customerLink.getElement().appendChild(customerimg.getElement()).appendChild(customertxt.getElement());
+
+        RouterLink dealLink = new RouterLink("", DealView.class);
+        dealLink.getElement().appendChild(dealimg.getElement()).appendChild(dealtxt.getElement());
+
+        RouterLink inventoryLink = new RouterLink("", AssetView.class);
+        inventoryLink.getElement().appendChild(inventoryimg.getElement()).appendChild(inventorytxt.getElement());
+
+        RouterLink orderLink = new RouterLink("", DealView.class);
+        orderLink.getElement().appendChild(orderimg.getElement()).appendChild(ordertxt.getElement());
+
+
+        RouterLink messageLink = new RouterLink("", MessagingView.class);
+        messageLink.getElement().appendChild(messageimg.getElement()).appendChild(messagetxt.getElement());
+
+
+        RouterLink invoiceLink = new RouterLink("", MessagingView.class);
+        invoiceLink.getElement().appendChild(invoiceimg.getElement()).appendChild(invoicetxt.getElement());
+
 
         RouterLink[] links = new RouterLink[] {
-                new RouterLink("Dashboard", DashboardView.class),
-                new RouterLink("Product", ProductView.class),
-                new RouterLink("Staffs", EmployeeView.class),
-                new RouterLink("Customers ", CustomerView.class),
-                new RouterLink("Order", DealView.class),
-                new RouterLink("Deal", DealView.class),
-                new RouterLink("Inventory Asset ", AssetView.class),
-                new RouterLink("Messaging ", MessagingView.class),
-                new RouterLink("Invoices ", InvoiceView.class),
+                dashboardLink,
+                productLink,
+                employeeLink,
+                customerLink,
+                orderLink,
+                dealLink,
+                inventoryLink,
+                messageLink,
+                invoiceLink,
+
 
         };
         return Arrays.stream(links).map(MainView::createTab).toArray(Tab[]::new);

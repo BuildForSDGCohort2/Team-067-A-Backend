@@ -28,19 +28,10 @@
 
 }
 
-.list-view.content .messagetemplateviewer{
-  display: none;
-}
-.messagetemplateviewer{
-  display: none;
-}
 
-@media only screen and (min-width: 768px) {
 
-  .list-view.content .messagetemplateviewer{
-    display: none;
-  }
-
+.termstxt{
+  margin :100px 100px auto;
 }
 
 
@@ -49,8 +40,15 @@
   .list-view.editing .customer-grid {
     display: none;
   }
+  .termstxt{
+    margin :var(--lumo-space-l);
+  }
 }
 
-@media all and (min-width: 1100px) {
+
+
+.list-view .preview-form {
+  flex: 1;
+  padding: var(--lumo-space-m);
 
 }

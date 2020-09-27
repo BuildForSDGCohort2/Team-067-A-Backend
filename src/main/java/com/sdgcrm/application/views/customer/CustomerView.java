@@ -95,7 +95,7 @@ public class CustomerView extends Div {
 
     private void configureGrid() {
         grid.addClassName("customer-grid");
-        grid.setSizeFull();
+
         excludeColumns();
         grid.addSelectionListener(e -> closeEditor());
 

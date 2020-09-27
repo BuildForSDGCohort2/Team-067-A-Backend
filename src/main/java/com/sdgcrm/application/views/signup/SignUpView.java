@@ -138,20 +138,18 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
                         user.setCompanyProfile(companyProfile);
                     }
                 });
-        ComboBox<String> companyPositionField = new ComboBox<>("Company Position");
-        binder.forField(companyPositionField).asRequired().bind(User::getCompanyPosition,User::setCompanyPosition);
-        companyPositionField.setAllowCustomValue(false);
 
 
-        TextField phoneField = new TextField("Phone");
-        binder.forField(phoneField).asRequired("Please Enter Phone Number").withConverter(new StringToLongConverter("Invalid Phone Number")).bind(User::getPhone,User::setPhone);
-
-        // This is a custom field we create to handle the field 'avatar' in our data. It
+         // This is a custom field we create to handle the field 'avatar' in our data. It
         // work just as any other field, e.g. the TextFields above. Instead of a String
         // value, it has an AvatarImage value.
 
+
+
         // We'll need these fields later on so let's store them as class variables
-        allowMarketingBox = new Checkbox("Accept Terms and Conditions");
+        Anchor termsandconditionslink= new Anchor("");
+        allowMarketingBox = new Checkbox("");
+        allowMarketingBox.setLabelAsHtml("<a href='/terms'> Accept Terms and Conditions</a>");
 
         allowMarketingBox.getStyle().set("padding-top", "10px");
         binder.forField(allowMarketingBox).asRequired();
@@ -177,19 +175,20 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
 
         Button loginButton = new Button("Already Signed Up");
         Anchor signIn = new Anchor("/", "Already Signed Up? Login");
-        signIn.addClassName("centered-content");
+        signIn.getStyle().set("margin", "10px auto");
+        signIn.getStyle().set("text-align", "center");
 
         submitButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         /*
          * Build the visible layout
          */
-        companyPositionField.setItems(userservice.getCompanyPosition());
+
         // Create a FormLayout with all our components. The FormLayout doesn't have any
         // logic (validation, etc.), but it allows us to configure Responsiveness from
         // Java code and its defaults looks nicer than just using a VerticalLayout.
-        FormLayout formLayout = new FormLayout(image,successMessage, firstnameField, lastnameField, companyNameField, companyPositionField, passwordField1, passwordField2,
-                 emailField, phoneField, allowMarketingBox, errorMessage, submitButton, signIn);
+        FormLayout formLayout = new FormLayout(image,successMessage, firstnameField, lastnameField, companyNameField, emailField, passwordField1, passwordField2,
+                  allowMarketingBox, errorMessage, submitButton, signIn);
 
         // Restrict maximum width and center on page
         formLayout.setMaxWidth("500px");
@@ -207,6 +206,7 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
         formLayout.setColspan(submitButton, 2);
         formLayout.setColspan(successMessage, 2);
         formLayout.setColspan(signIn, 2);
+        formLayout.setColspan(allowMarketingBox, 2);
 
         // Add some styles to the error message to make it pop out
         errorMessage.getStyle().set("color", "var(--lumo-error-text-color)");
@@ -285,9 +285,6 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
                 user.setFirstname(firstnameField.getValue());
                 user.setLastname(lastnameField.getValue());
                 user.setEmail(emailField.getValue());
-                user.setPhone(Long.parseLong(phoneField.getValue()));
-
-                user.setCompanyPosition(companyPositionField.getValue());
                 user.setPassword(passwordEncoder.encode(passwordField2.getValue()));
                 user.setUserToken(generateVerificationString());
                 user.setRoles(roles);

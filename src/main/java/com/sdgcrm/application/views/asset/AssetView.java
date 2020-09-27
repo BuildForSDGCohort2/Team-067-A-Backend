@@ -116,7 +116,7 @@ public class AssetView extends Div {
 
     private void configureGrid() {
         grid.addClassName("customer-grid");
-        grid.setSizeFull();
+
         grid.addSelectionListener(e -> closeEditor());
 
        excludeColumns();

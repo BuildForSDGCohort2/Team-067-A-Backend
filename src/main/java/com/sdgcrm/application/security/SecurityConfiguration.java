@@ -34,7 +34,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .authorizeRequests().antMatchers("/login").permitAll().and()
-                .authorizeRequests().antMatchers("/signup").permitAll()
+                .authorizeRequests().antMatchers("/signup").permitAll().and()
+                .authorizeRequests().antMatchers("/terms").permitAll()
+
                 .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
 
                 .anyRequest().authenticated()
