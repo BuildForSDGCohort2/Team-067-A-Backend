@@ -64,6 +64,7 @@ public class CustomerViewB extends VerticalLayout {
 
         getStyle().set("max-width","950px");
         getStyle().set("margin","0px auto");
+        getStyle().set("overflow","hidden");
 
 
         next.addClickListener(e -> {

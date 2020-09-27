@@ -64,6 +64,7 @@ public class ProductViewB extends VerticalLayout {
         add(image, text, step, body, productView, createButtonsLayout());
 
         getStyle().set("max-width","950px");
+        getStyle().set("overflow","hidden");
         getStyle().set("margin","0px auto");
 
 
