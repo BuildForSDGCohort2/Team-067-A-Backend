@@ -10,22 +10,22 @@ import com.sdgcrm.application.data.entity.User;
 import com.sdgcrm.application.data.service.UserService;
 import com.sdgcrm.application.security.SecurityUtils;
 import com.sdgcrm.application.views.asset.AssetView;
+import com.sdgcrm.application.views.creditor.CreditorView;
 import com.sdgcrm.application.views.customer.CustomerView;
 import com.sdgcrm.application.views.dashboard.DashboardView;
 import com.sdgcrm.application.views.deal.DealView;
 import com.sdgcrm.application.views.employee.EmployeeView;
-import com.sdgcrm.application.views.invoice.InvoiceView;
 import com.sdgcrm.application.views.messaging.MessagingView;
+import com.sdgcrm.application.views.order.OrderView;
 import com.sdgcrm.application.views.product.ProductView;
+import com.sdgcrm.application.views.setting.OrganisationSettingView;
+import com.sdgcrm.application.views.setting.ProfileSettingView;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.*;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -50,14 +50,14 @@ import javax.imageio.stream.ImageInputStream;
  * The main view is a top-level placeholder for other views.
  */
 
-@PWA(name = "SDGCRM", shortName = "SDGCRM",  enableInstallPrompt = true)
+@PWA(name = "SDGCRM", shortName = "SDGCRM")
 @Theme(value = Lumo.class, variant=Lumo.DARK)
 @CssImport("./styles/views/main/main-view.css")
 public class MainView extends AppLayout {
 
     private final Tabs menu;
     private H1 viewTitle;
-    private H1 userTitle;
+
 
     UserService userservice;
     User currentUser;
@@ -83,6 +83,7 @@ public class MainView extends AppLayout {
     }
 
     private Component createHeaderContent() {
+        H1 userTitle;
         HorizontalLayout layout = new HorizontalLayout();
         layout.setId("header");
         layout.getThemeList().set("dark", true);
@@ -168,6 +169,9 @@ public class MainView extends AppLayout {
             Span  inventorytxt= new Span("Inventory");
             Span  messagetxt= new Span("  Message");
             Span  invoicetxt= new Span("Invoice");
+            Span  companySettingtxt= new Span("Company Setting");
+            Span  personnalSettingtxt= new Span("personnal Setting");
+            Span  creditortxt= new Span("Creditor");
 
             Image dashboardimg= new Image();
             dashboardimg.setSrc("icons/appbar.app.svg");
@@ -227,7 +231,7 @@ public class MainView extends AppLayout {
         RouterLink inventoryLink = new RouterLink("", AssetView.class);
         inventoryLink.getElement().appendChild(inventoryimg.getElement()).appendChild(inventorytxt.getElement());
 
-        RouterLink orderLink = new RouterLink("", DealView.class);
+        RouterLink orderLink = new RouterLink("", OrderView.class);
         orderLink.getElement().appendChild(orderimg.getElement()).appendChild(ordertxt.getElement());
 
 
@@ -238,6 +242,17 @@ public class MainView extends AppLayout {
         RouterLink invoiceLink = new RouterLink("", MessagingView.class);
         invoiceLink.getElement().appendChild(invoiceimg.getElement()).appendChild(invoicetxt.getElement());
 
+        RouterLink personnalSettingLink = new RouterLink("", ProfileSettingView.class);
+        personnalSettingLink.getElement().appendChild(invoiceimg.getElement()).appendChild(companySettingtxt.getElement());
+
+
+        RouterLink companySettingLink = new RouterLink("", OrganisationSettingView.class);
+        companySettingLink.getElement().appendChild(invoiceimg.getElement()).appendChild(personnalSettingtxt.getElement());
+
+
+
+        RouterLink creditorLink = new RouterLink("", CreditorView.class);
+        creditorLink.getElement().appendChild(creditortxt.getElement());
 
         RouterLink[] links = new RouterLink[] {
                 dashboardLink,
@@ -248,7 +263,9 @@ public class MainView extends AppLayout {
                 dealLink,
                 inventoryLink,
                 messageLink,
-                invoiceLink,
+                personnalSettingLink,
+                companySettingLink,
+                creditorLink
 
 
         };

@@ -1,6 +1,5 @@
 package com.sdgcrm.application.views.login;
 
-import com.helger.commons.base64.Base64;
 import com.sdgcrm.application.data.entity.User;
 import com.sdgcrm.application.data.service.UserService;
 import com.sdgcrm.application.views.AppConst;
@@ -9,7 +8,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -21,7 +19,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Viewport;
 import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Map;
@@ -31,14 +28,12 @@ import java.util.Map;
 @Viewport(AppConst.VIEWPORT)
 public class LoginView extends VerticalLayout implements  BeforeEnterObserver {
 
-    private LoginForm login = new LoginForm();
+    private final LoginForm login = new LoginForm();
     LoginI18n i18n;
     Span successMessage = new Span();
 
 
     UserService userservice;
-    @Autowired
-    PasswordEncoder encoder;
 
     public LoginView( @Autowired
                               UserService userservice){
@@ -65,9 +60,7 @@ public class LoginView extends VerticalLayout implements  BeforeEnterObserver {
         Button registerbtn= new Button("Get Stated", new Icon(VaadinIcon.ARROW_RIGHT));
 
         registerbtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        registerbtn.addClickListener(e -> {
-            UI.getCurrent().navigate(SignUpView.class);
-        });
+        registerbtn.addClickListener(e -> UI.getCurrent().navigate(SignUpView.class));
 
         add(registerbtn);
     }
@@ -123,7 +116,7 @@ public class LoginView extends VerticalLayout implements  BeforeEnterObserver {
             String value = token.get(0);
 
            User validUser= userservice.findByUserToken(value);
-            System.out.println(validUser.toString());;
+            System.out.println(validUser.toString());
             validUser.setEnabled(true);
 
             userservice.store(validUser);

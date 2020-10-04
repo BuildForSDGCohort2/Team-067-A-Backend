@@ -101,7 +101,7 @@ public class AssetView extends Div {
         content.addClassName("content");
         content.setSizeFull();
 
-        add(getTabsbar(),getToolbar(), content);
+        add(getToolbar(), content);
 
         updateList();
         closeEditor();
@@ -149,18 +149,7 @@ public class AssetView extends Div {
         grid.setItems(assetService.findAll(filterText.getValue(), currentUser));
 
     }
-    private Tabs getTabsbar() {
 
-        Tab tab1 = new Tab("Assets");
-        Tab tab2 = new Tab("Maintenance");
-        Tabs tabs = new Tabs(tab1, tab2);
-        tabs.setFlexGrowForEnclosedTabs(1);
-
-
-
-
-        return tabs;
-    }
 
 
     private HorizontalLayout getToolbar() {

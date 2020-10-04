@@ -280,7 +280,7 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
                         roles.add(userRole);
                 }
                 User user = new User();
-                CompanyProfile companyProfile= new CompanyProfile(companyNameField.getValue(), "", "", "");
+                CompanyProfile companyProfile= new CompanyProfile(companyNameField.getValue(), "", "", "", "", "", 0L);
 
                 user.setFirstname(firstnameField.getValue());
                 user.setLastname(lastnameField.getValue());
@@ -314,7 +314,7 @@ public class SignUpView extends VerticalLayout implements BeforeEnterObserver {
 
 
 
-                getUI().ifPresent(ui -> ui.navigate("Login"));
+                getUI().ifPresent(ui -> ui.navigate("login"));
                 showSuccessNotification(msg);
                 init();
             }

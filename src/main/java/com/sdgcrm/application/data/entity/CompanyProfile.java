@@ -47,6 +47,17 @@ public class CompanyProfile extends Auditable<String>{
     @NotNull
     private String instagram="";
 
+
+    @NotNull
+    private String businessAccountName;
+
+    @NotNull
+    private String bankName;
+
+    @NotNull
+    private long businessAccountNumber;
+
+
     private long phone;
 
 
@@ -118,11 +129,14 @@ public class CompanyProfile extends Auditable<String>{
         this.sector = sector;
     }
 
-    public CompanyProfile(String name, String location, String website, String sector) {
+    public CompanyProfile(String name, String location, String website, String sector, String businessAccountName, String bankName, long accountNumber) {
         Name = name;
         Location = location;
         this.website = website;
         this.sector = sector;
+        this.businessAccountName= businessAccountName;
+        this.bankName= bankName;
+        this.businessAccountNumber= accountNumber;
     }
 
     public String getFacebook() {

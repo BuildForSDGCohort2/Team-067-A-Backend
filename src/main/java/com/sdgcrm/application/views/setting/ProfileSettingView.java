@@ -129,7 +129,7 @@ public class ProfileSettingView extends Div {
         });
         profilePic.getStyle().set("border-radius","50%");
 
-        add(getToolbar());
+
 
         pic.add(profilePic, upload);
 
@@ -202,20 +202,7 @@ public class ProfileSettingView extends Div {
     }
 
 
-    private Tabs getToolbar() {
 
-        Tab tab1 = createMenuItem("Profile", ProfileSettingView.class);
-        Tab tab2 = createMenuItem("Organisation", OrganisationSettingView.class);
-        Tab tab3 = createMenuItem("Application", AppSettingView.class);
-        Tabs tabs = new Tabs(tab1, tab2, tab3);
-        tabs.setFlexGrowForEnclosedTabs(1);
-        tabs.setSelectedTab(tab1);
-
-
-
-
-        return tabs;
-    }
 
     private Tab createMenuItem(String title, Class<? extends Component> target) {
         RouterLink link = new RouterLink(title, target);

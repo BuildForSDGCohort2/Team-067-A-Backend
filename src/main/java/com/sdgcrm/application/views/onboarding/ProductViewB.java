@@ -19,13 +19,15 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Viewport;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Route("get-started/product")
 @CssImport("./styles/shared-styles.css")
 @Viewport(AppConst.VIEWPORT)
-public class ProductViewB extends VerticalLayout {
+public class ProductViewB extends VerticalLayout implements BeforeEnterObserver {
 
 
     ProductView productView;
@@ -68,6 +70,7 @@ public class ProductViewB extends VerticalLayout {
         getStyle().set("margin","0px auto");
 
 
+
         next.addClickListener(e -> {
             UI.getCurrent().navigate(EmployeeViewB.class);
         });
@@ -80,6 +83,7 @@ public class ProductViewB extends VerticalLayout {
     }
 
     private HorizontalLayout createButtonsLayout() {
+        Anchor geh= new Anchor("/get-started/employee","next");
         next.setSizeFull();
         skip.setSizeFull();
         skip.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
@@ -89,9 +93,15 @@ public class ProductViewB extends VerticalLayout {
 
         HorizontalLayout footer= new HorizontalLayout();
         footer.setWidthFull();
-        footer.add(next, skip);
+        footer.add(geh,next, skip);
          return footer;
 
     }
 
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        this.currentUser= userService.findByEmail(SecurityUtils.getLoggedinUsername());
+        currentUser.setOnboarded(true);
+        userService.store(currentUser);
+    }
 }

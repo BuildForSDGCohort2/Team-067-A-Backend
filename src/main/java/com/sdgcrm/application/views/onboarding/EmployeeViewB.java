@@ -1,12 +1,10 @@
 package com.sdgcrm.application.views.onboarding;
 
 import com.sdgcrm.application.data.entity.User;
-import com.sdgcrm.application.data.service.AssetService;
 import com.sdgcrm.application.data.service.EmployeeService;
 import com.sdgcrm.application.data.service.UserService;
 import com.sdgcrm.application.security.SecurityUtils;
 import com.sdgcrm.application.views.AppConst;
-import com.sdgcrm.application.views.asset.AssetView;
 import com.sdgcrm.application.views.dashboard.DashboardView;
 import com.sdgcrm.application.views.employee.EmployeeView;
 import com.vaadin.flow.component.Key;
@@ -66,9 +64,7 @@ public class EmployeeViewB extends VerticalLayout {
         getStyle().set("margin","0px auto");
         getStyle().set("overflow","hidden");
 
-        next.addClickListener(e -> {
-            UI.getCurrent().navigate(CustomerViewB.class);
-        });
+        next.addClickListener(e -> UI.getCurrent().navigate(CustomerViewB.class));
 
         skip.addClickListener(e -> {
             UI.getCurrent().navigate(DashboardView.class);

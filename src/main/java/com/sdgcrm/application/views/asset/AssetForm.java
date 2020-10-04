@@ -1,7 +1,7 @@
 package com.sdgcrm.application.views.asset;
 
 import com.sdgcrm.application.data.entity.Asset;
-import com.sdgcrm.application.data.entity.Customer;
+import com.sdgcrm.application.data.entity.Employee;
 import com.sdgcrm.application.data.entity.User;
 import com.sdgcrm.application.data.service.AssetService;
 import com.sdgcrm.application.data.service.EmployeeService;
@@ -26,8 +26,6 @@ import com.vaadin.flow.data.converter.LocalDateToDateConverter;
 import com.vaadin.flow.shared.Registration;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 public class AssetForm extends FormLayout {
@@ -54,7 +52,7 @@ public class AssetForm extends FormLayout {
 
     TextArea notestf = new TextArea("Notes");
 
-    TextField purchasedBytf = new TextField("Purchased By");
+    ComboBox<String> purchasedBytf = new ComboBox<>("Purchased By: Select / Enter Name");
 
     Button save = new Button("Save");
     Button delete = new Button("Delete");
@@ -82,6 +80,8 @@ public class AssetForm extends FormLayout {
 
         healthStatustf.setItems(assetService.getAssetHealthCategories());
         healthStatustf.setAllowCustomValue(false);
+
+        purchasedBytf.setItems(employeeService.findAll("", currentUser).stream().map(Employee::getName));
 
 
         binder.forField(maintenceScheduletf).bind(Asset::getMaintenceSchedule,Asset::setMaintenceSchedule);
@@ -114,10 +114,6 @@ public class AssetForm extends FormLayout {
         purchasedBytf.setLabel("Purchased By");
         purchasedBytf.setPlaceholder("Enter Name...");
 
-    }
-
-    private List<String> findOptions(final String text) {
-        return employeeService.findAll(text, currentUser).stream().map(employee -> employee.getName()).collect(Collectors.toList());
     }
 
     private HorizontalLayout createButtonsLayout() {
@@ -153,7 +149,7 @@ public class AssetForm extends FormLayout {
 
 
     public static abstract class AssetFormEvent extends ComponentEvent<AssetForm> {
-        private Asset asset;
+        private final Asset asset;
 
         protected AssetFormEvent(AssetForm source, Asset asset) {
             super(source, false);

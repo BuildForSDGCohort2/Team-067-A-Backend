@@ -1,7 +1,6 @@
-package com.sdgcrm.application.views.deal;
+package com.sdgcrm.application.views.order;
 
 import com.sdgcrm.application.data.entity.Deal;
-import com.sdgcrm.application.data.entity.Product;
 import com.sdgcrm.application.data.entity.User;
 import com.sdgcrm.application.data.service.DealService;
 import com.sdgcrm.application.data.service.ProductService;
@@ -21,8 +20,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.shared.Registration;
 
-
-public class DealForm extends FormLayout {
+public class OrderForm extends FormLayout {
 
 
     private Deal deal;
@@ -44,8 +42,8 @@ public class DealForm extends FormLayout {
     Button delete = new Button("Delete");
     Button close = new Button("Cancel");
 
-    Binder<Deal> binder = new Binder<>();
-    public DealForm(User currentUser, DealService dealService, ProductService productService) {
+    Binder<Deal> binder = new Binder<Deal>();
+    public OrderForm(User currentUser, DealService dealService, ProductService productService) {
         this.currentUser= currentUser;
         //  binder.bindInstanceFields(this);
 
@@ -58,13 +56,13 @@ public class DealForm extends FormLayout {
         binder.forField(quantitytf).bind(Deal::getQuantity,Deal::setQuantity);
         binder.forField(companyNametf).bind(Deal::getCompanyName,Deal::setCompanyName);
 
+        productNametf.setItems(productService.findAll("", currentUser).stream().map(product -> product.getName()));
+
+        productNametf.setPlaceholder("Select / Enter Product Name");
         statusTF.setItems(dealService.getDealStatus());
-        productNametf.setItems(productService.findAll("", currentUser).stream().map(Product::getName));
 
         binder.forField(statusTF).bind(Deal::getStatus,Deal::setStatus);
 
-
-        productNametf.setPlaceholder("Select / Enter Product Name");
 
         binder.forField(notesTF).bind(Deal::getNotes,Deal::setNotes);
 
@@ -96,8 +94,8 @@ public class DealForm extends FormLayout {
         close.addClickShortcut(Key.ESCAPE);
 
         save.addClickListener(event -> validateAndSave());
-        delete.addClickListener(event -> fireEvent(new DealForm.DeleteEvent(this, deal)));
-        close.addClickListener(event -> fireEvent(new DealForm.CloseEvent(this)));
+        delete.addClickListener(event -> fireEvent(new DeleteEvent(this, deal)));
+        close.addClickListener(event -> fireEvent(new CloseEvent(this)));
 
 
         binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
@@ -110,7 +108,7 @@ public class DealForm extends FormLayout {
 
            // deal.setCompany(currentUser);
             binder.writeBean(deal);
-            fireEvent(new DealForm.SaveEvent(this, deal));
+            fireEvent(new SaveEvent(this, deal));
         } catch (ValidationException e) {
             e.printStackTrace();
         }
@@ -118,10 +116,10 @@ public class DealForm extends FormLayout {
 
 
     // Events
-    public static abstract class DealFormEvent extends ComponentEvent<DealForm> {
-        private final Deal deal;
+    public static abstract class DealFormEvent extends ComponentEvent<OrderForm> {
+        private Deal deal;
 
-        protected DealFormEvent(DealForm source, Deal deal) {
+        protected DealFormEvent(OrderForm source, Deal deal) {
             super(source, false);
             this.deal = deal;
         }
@@ -131,21 +129,21 @@ public class DealForm extends FormLayout {
         }
     }
 
-    public static class SaveEvent extends DealForm.DealFormEvent {
-        SaveEvent(DealForm source, Deal deal) {
+    public static class SaveEvent extends DealFormEvent {
+        SaveEvent(OrderForm source, Deal deal) {
             super(source, deal);
         }
     }
 
-    public static class DeleteEvent extends DealForm.DealFormEvent {
-        DeleteEvent(DealForm source, Deal deal) {
+    public static class DeleteEvent extends DealFormEvent {
+        DeleteEvent(OrderForm source, Deal deal) {
             super(source, deal);
         }
 
     }
 
-    public static class CloseEvent extends DealForm.DealFormEvent {
-        CloseEvent(DealForm source) {
+    public static class CloseEvent extends DealFormEvent {
+        CloseEvent(OrderForm source) {
             super(source, null);
         }
     }

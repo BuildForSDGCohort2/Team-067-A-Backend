@@ -1,6 +1,5 @@
 package com.sdgcrm.application.views.messaging;
 
-import com.sdgcrm.application.data.entity.Customer;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
@@ -12,12 +11,11 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.shared.Registration;
 
-import java.util.stream.Collectors;
 
 public class MessagePreviewForm extends Div {
 
 
-    private Recepient recepient;
+    Recepient recepient;
 
     Button close = new Button("Close preview");
     Button send = new Button("Send Message");
@@ -93,7 +91,7 @@ public class MessagePreviewForm extends Div {
 
     // Events
     public static abstract class PreviewFormEvent extends ComponentEvent<MessagePreviewForm> {
-        private Recepient recepient;
+        private final Recepient recepient;
 
         protected PreviewFormEvent(MessagePreviewForm source, Recepient recepient) {
             super(source, false);

@@ -1,22 +1,25 @@
 package com.sdgcrm.application.views.employee;
 
-import com.sdgcrm.application.data.entity.Customer;
 import com.sdgcrm.application.data.entity.Employee;
 import com.sdgcrm.application.data.entity.User;
-import com.sdgcrm.application.views.customer.CustomerForm;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
+import com.vaadin.flow.data.converter.LocalDateToDateConverter;
 import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.shared.Registration;
+
+import java.time.LocalDate;
 
 public class EmployeeForm extends FormLayout {
 
@@ -25,10 +28,19 @@ public class EmployeeForm extends FormLayout {
     private Employee employee;
 
 
-    TextField nametf = new TextField("Full Name");
+    TextField  nametf = new TextField("Full Name");
     EmailField emailtf = new EmailField("Email");
     TextField positiontf = new TextField("Position");
     TextField phonetf = new TextField("Phone");
+
+    DatePicker dateHiredtf= new DatePicker("Hire date");
+    DatePicker dateOfBirthtf= new DatePicker("Date of Birth") ;
+    NumberField salaryTF = new NumberField("Salary");
+    TextField sexTF = new TextField("Sex");
+    TextField addressTF = new TextField("Address");
+    TextField cityTf = new TextField("City");
+    TextField stateTF = new TextField("State");
+
 
 
     Button save = new Button("Save");
@@ -36,14 +48,33 @@ public class EmployeeForm extends FormLayout {
     Button close = new Button("Cancel");
 
 
-    Binder<Employee> binder = new Binder<Employee>();
+    Binder<Employee> binder = new Binder<>();
     public EmployeeForm(User currentUser) {
         this.currentUser= currentUser;
+
         //  binder.bindInstanceFields(this);
 
         binder.forField(nametf).bind(Employee::getName,Employee::setName);
         binder.forField(emailtf).bind(Employee::getEmail,Employee::setEmail);
         binder.forField(positiontf).bind(Employee::getPosition,Employee::setPosition);
+        binder.forField(dateHiredtf).withConverter(new LocalDateToDateConverter()).bind(Employee::getDateHired, Employee::setDateHired);
+
+        binder.forField(dateOfBirthtf).withConverter(new LocalDateToDateConverter()).bind(Employee::getDateOfBirth, Employee::setDateOfBirth);
+        binder.forField(salaryTF).bind(Employee::getSalary, Employee::setSalary);
+        binder.forField(sexTF).bind(Employee::getSex, Employee::setSex);
+        binder.forField(addressTF).bind(Employee::getCity, Employee::setCity);
+        binder.forField(cityTf).bind(Employee::getCity, Employee::setCity);
+        binder.forField(stateTF).bind(Employee::getState, Employee::setState);
+
+
+        dateHiredtf.setClearButtonVisible(true);
+        dateHiredtf.setValue(LocalDate.now());
+
+        dateOfBirthtf.setClearButtonVisible(true);
+        dateOfBirthtf.setValue(LocalDate.now());
+
+
+
 
 
 
@@ -54,6 +85,13 @@ public class EmployeeForm extends FormLayout {
                 emailtf,
                 phonetf,
                 positiontf,
+                dateHiredtf,
+                dateOfBirthtf,
+                salaryTF,
+                sexTF,
+                addressTF,
+                cityTf,
+                stateTF,
                 createButtonsLayout());
 
     }
@@ -95,7 +133,7 @@ public class EmployeeForm extends FormLayout {
 
     // Events
     public static abstract class EmployeeFormEvent extends ComponentEvent<EmployeeForm> {
-        private Employee employee;
+        private final Employee employee;
 
 
         protected EmployeeFormEvent(EmployeeForm source, Employee employee) {

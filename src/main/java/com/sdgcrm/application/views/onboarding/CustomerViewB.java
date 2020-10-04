@@ -1,13 +1,10 @@
 package com.sdgcrm.application.views.onboarding;
 
 import com.sdgcrm.application.data.entity.User;
-import com.sdgcrm.application.data.service.AssetService;
 import com.sdgcrm.application.data.service.CustomerService;
-import com.sdgcrm.application.data.service.EmployeeService;
 import com.sdgcrm.application.data.service.UserService;
 import com.sdgcrm.application.security.SecurityUtils;
 import com.sdgcrm.application.views.AppConst;
-import com.sdgcrm.application.views.asset.AssetView;
 import com.sdgcrm.application.views.customer.CustomerView;
 import com.sdgcrm.application.views.dashboard.DashboardView;
 import com.vaadin.flow.component.Key;
@@ -32,7 +29,6 @@ public class CustomerViewB extends VerticalLayout {
     CustomerView customerView;
     CustomerService customerService;
     UserService userService;
-    EmployeeService employeeService;
     User currentUser;
 
 
@@ -67,13 +63,9 @@ public class CustomerViewB extends VerticalLayout {
         getStyle().set("overflow","hidden");
 
 
-        next.addClickListener(e -> {
-            UI.getCurrent().navigate(AssetViewB.class);
-        });
+        next.addClickListener(e -> UI.getCurrent().navigate(AssetViewB.class));
 
-        skip.addClickListener(e -> {
-            UI.getCurrent().navigate(DashboardView.class);
-        });
+        skip.addClickListener(e -> UI.getCurrent().navigate(DashboardView.class));
 
 
     }

@@ -49,7 +49,6 @@ public class MessagingView extends Div {
     Button save = new Button("Send Message");
 
     Button preview = new Button("Preview Message");
-    private TextField filterText = new TextField();
     RecepientsForm recepientsForm;
     MessagePreviewForm messagePreviewForm;
 
@@ -135,9 +134,9 @@ public class MessagingView extends Div {
 
 
     public  void saveProduct(RecepientsForm.SaveEvent event) {
-        System.out.println(event.getRecepient().getRecepientsList().toString());
+        System.out.println(event.getRecepient().getRecepientsList());
         recepient.setRecepientsList(event.getRecepient().getRecepientsList());
-        emailreceipiantstf.setValue(event.getRecepient().getRecepientsList().toString());
+        emailreceipiantstf.setValue(event.getRecepient().getRecepientsList());
 
         closeEditor();
     }

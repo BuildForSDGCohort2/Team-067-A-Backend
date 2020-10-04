@@ -44,6 +44,10 @@ public class User {
 
     private boolean enabled;
 
+
+
+    private boolean onboarded;
+
     private String userToken;
 
     @Lob
@@ -215,5 +219,13 @@ public class User {
 
     public User() {
 
+    }
+
+    public boolean isOnboarded() {
+        return onboarded;
+    }
+
+    public void setOnboarded(boolean onboarded) {
+        this.onboarded = onboarded;
     }
 }

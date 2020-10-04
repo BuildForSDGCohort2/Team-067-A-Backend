@@ -1,6 +1,5 @@
 package com.sdgcrm.application.views.dashboard;
 
-import com.sdgcrm.application.data.entity.Customer;
 import com.sdgcrm.application.data.entity.User;
 import com.sdgcrm.application.data.service.CustomerService;
 import com.sdgcrm.application.data.service.EmployeeService;
@@ -8,7 +7,6 @@ import com.sdgcrm.application.data.service.ProductService;
 import com.sdgcrm.application.data.service.UserService;
 import com.sdgcrm.application.security.SecurityUtils;
 import com.sdgcrm.application.views.main.MainView;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.BoxSizing;
@@ -17,11 +15,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
-import com.vaadin.flow.theme.Theme;
-import com.vaadin.flow.theme.lumo.Lumo;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.awt.*;
 
 @Route(value = "dashboard", layout = MainView.class)
 @RouteAlias(value = "", layout = MainView.class)
@@ -265,7 +260,7 @@ public class DashboardView extends Div {
 
         H4 he=new H4("DEAL");
         H2 details=new H2(Integer.toString(employeeService.getTotalEmployees(currentUser)));
-        container.add(details,he);
+        container.add(details, he);
         productdiv.add(container);
 
 

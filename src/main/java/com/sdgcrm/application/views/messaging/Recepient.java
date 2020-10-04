@@ -1,7 +1,5 @@
 package com.sdgcrm.application.views.messaging;
 
-import java.util.List;
-import java.util.Set;
 
 public class Recepient {
 

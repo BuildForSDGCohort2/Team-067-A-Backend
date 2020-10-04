@@ -1,4 +1,4 @@
-package com.sdgcrm.application.views.deal;
+package com.sdgcrm.application.views.order;
 
 import com.sdgcrm.application.data.entity.Deal;
 import com.sdgcrm.application.data.entity.User;
@@ -7,8 +7,10 @@ import com.sdgcrm.application.data.service.ProductService;
 import com.sdgcrm.application.data.service.UserService;
 import com.sdgcrm.application.security.SecurityUtils;
 import com.sdgcrm.application.views.main.MainView;
+import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
@@ -20,26 +22,25 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Route(value = "deal", layout = MainView.class)
-@PageTitle("Deal")
+@Route(value = "order", layout = MainView.class)
+@PageTitle("Order")
 @CssImport("./styles/views/about/about-view.css")
-public class DealView extends Div {
+public class OrderView extends Div {
 
 
     DealService dealService;
     UserService userService;
-    ProductService productService;
     User currentUser;
+    ProductService productService;
 
-    DealForm form;
+    OrderForm form;
 
     Grid<Deal> grid= new Grid<>(Deal.class);
-    private final TextField filterText = new TextField();
+    private TextField filterText = new TextField();
 
-    public DealView(@Autowired DealService dealService, @Autowired UserService userService, @Autowired ProductService productService) {
+    public OrderView(@Autowired DealService dealService, @Autowired UserService userService, @Autowired ProductService productService) {
         this.dealService=dealService;
         this.userService= userService;
-        this.productService= productService;
 
 
         addClassName("list-view");
@@ -49,10 +50,10 @@ public class DealView extends Div {
 
         this.currentUser= userService.findByEmail(SecurityUtils.getLoggedinUsername());
 
-        form = new DealForm(currentUser, dealService, productService);
-        form.addListener(DealForm.SaveEvent.class, this::saveDeal);
-        form.addListener(DealForm.DeleteEvent.class, this::deleteDeal);
-        form.addListener(DealForm.CloseEvent.class, e -> closeEditor());
+        form = new OrderForm(currentUser, dealService, productService);
+        form.addListener(OrderForm.SaveEvent.class, this::saveDeal);
+        form.addListener(OrderForm.DeleteEvent.class, this::deleteDeal);
+        form.addListener(OrderForm.CloseEvent.class, e -> closeEditor());
 
 
         Div content = new Div(grid, form);
@@ -64,13 +65,13 @@ public class DealView extends Div {
         closeEditor();
     }
 
-    private void saveDeal(DealForm.SaveEvent event) {
+    private void saveDeal(OrderForm.SaveEvent event) {
         dealService.saveDeal(event.getCustomer());
         updateList();
         closeEditor();
     }
 
-    private  void deleteDeal(DealForm.DeleteEvent event) {
+    private  void deleteDeal(OrderForm.DeleteEvent event) {
         dealService.delete(event.getCustomer());
         updateList();
         closeEditor();
@@ -115,6 +116,11 @@ public class DealView extends Div {
 
 
 
+    private void addFormItem(Div wrapper, FormLayout formLayout, AbstractField field, String fieldName) {
+        formLayout.addFormItem(field, fieldName);
+        wrapper.add(formLayout);
+        field.getElement().getClassList().add("full-width");
+    }
 
     private HorizontalLayout getToolbar() {
         filterText.setPlaceholder("Search Deals...");

@@ -1,20 +1,16 @@
 package com.sdgcrm.application.views.messaging;
 
 import com.sdgcrm.application.data.entity.Customer;
-import com.sdgcrm.application.data.entity.Product;
 import com.sdgcrm.application.data.entity.User;
 import com.sdgcrm.application.data.service.CustomerService;
-import com.sdgcrm.application.views.product.ProductForm;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.listbox.ListBox;
-import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
@@ -80,7 +76,7 @@ public class RecepientsForm  extends FormLayout {
 
     // Events
     public static abstract class RecepientsFormEvent extends ComponentEvent<RecepientsForm> {
-        private Recepient recepient;
+        private final Recepient recepient;
 
         protected RecepientsFormEvent(RecepientsForm source, Recepient recepient) {
             super(source, false);

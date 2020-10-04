@@ -35,7 +35,7 @@ public class CustomerForm extends FormLayout {
     Button delete = new Button("Delete");
     Button close = new Button("Cancel");
 
-    Binder<Customer> binder = new Binder<Customer>();
+    Binder<Customer> binder = new Binder<>();
     public CustomerForm(User currentUser) {
         this.currentUser= currentUser;
       //  binder.bindInstanceFields(this);
@@ -99,7 +99,7 @@ public class CustomerForm extends FormLayout {
 
     // Events
     public static abstract class CustomerFormEvent extends ComponentEvent<CustomerForm> {
-        private Customer customer;
+        private final Customer customer;
 
         protected CustomerFormEvent(CustomerForm source, Customer customer) {
             super(source, false);
