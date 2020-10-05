@@ -88,9 +88,28 @@ This project was built using these technologies.
 
 <!-- CONTACT -->
 
+## Contact
+
 👤 **Precious**
 
 - Github: [@Precious](https://github.com/evabanegacom)
+
+👤 **Olalekan**
+
+- Github: [@Olalekan Afolayan](https://github.com/lek-syde)
+
+👤 **Godstime**
+
+- Github: [@Godstime Onyibe](https://github.com/Godstyme)
+
+👤 **Praise**
+
+- Github: [@Chukwudi Eze](https://github.com/devchux)
+
+👤 **Kingsley**
+
+- Github: [@Chukwudi Eze](https://github.com/Kingsley-EZE)
+
 
 <!-- Application Features -->
 
