@@ -36,12 +36,12 @@
   <p align="center">
     This is the Easy Crm project of the andela/facebook build for SDG program.
     <br />
-    <a href="https://github.com/evabanegacom/Team-067-A-Backend"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/BuildForSDGCohort2/Team-067-A-Backend.git/issues"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/evabanegacom/Team-067-A-Backend/issues">Report Bug</a>
+    <a href="https://github.com/BuildForSDGCohort2/Team-067-A-Backend.git/issues">Report Bug</a>
     ·
-    <a href="https://github.com/evabanegacom/Team-067-A-Backend/issues">Request Feature</a>
+    <a href="https://github.com/BuildForSDGCohort2/Team-067-A-Backend.git/issues">Request Feature</a>
   </p>
 </p>
 
