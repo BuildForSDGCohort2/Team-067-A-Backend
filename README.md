@@ -26,6 +26,11 @@
     <img src="https://res.cloudinary.com/moversng/image/upload/v1600103267/easycrms_cfffze.svg" alt="Logo" width="80" height="80">
   </a>
 
+  <p align="center">
+  <a href="https://github.com/evabanegacom/Team-067-A-Backend/feature">
+    <img src="images/icon.png" alt="Logo" width="80" height="80">
+  </a>
+
   <h3 align="center">SDG Easy CRM</h3>
 
   <p align="center">
@@ -90,7 +95,7 @@ This project was built using these technologies.
 
 <!-- Application Features -->
 
- Application Features
+## Application Features
 * Easy Intuitive UI - Loads fast and works reliable regardless of network connection
 * PWA- progressive web app - Native app experience. EasyCRM can be installed as an application on      desktop, ios, and android.
 * Easy to use- Easy CRM was designed for the very basic user and use case. its was designed to be very easy to use and understand.
@@ -112,7 +117,8 @@ ERD Sketch Developed using <a href="https://www.jetbrains.com/idea/">Intellij ID
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
-* [Microverse](https://www.microverse.org/)
+* [Andela](https://www.andela.com/)
+* [Facebook](https://www.facebook.com/)
 
 ## Show your support
 
