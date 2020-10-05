@@ -60,10 +60,9 @@
 
 ![Screenshot](images/easy.png)
 
-This is a weather app that demonstrates using application processing interface (A.P.I) to get information
-to clients over the web
-
-The idea focuses on easily getting information through API
+This is a software for small organisations/business that focuses in Customer RElations Management,
+Asset Management and Account management.
+The essence of this software is to help small orgainsations with data and insight on how their business(es) are performing and manage them on the fly electronically. IT is connected to a database and information can be gotten or obtained at any point in time. This software fits well into mobile devices and can be installed as a mobile app.anyone can use it as it doesn't require technical skill to navigate
 
 ## LIVE DEMO
  [Link to live demo](https://sdgcrm.herokuapp.com/) 
