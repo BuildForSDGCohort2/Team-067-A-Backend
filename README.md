@@ -75,15 +75,15 @@ This project was built using these technologies.
 * Javascript
 * HTML
 * CSS
-* Bootstrap
+* Java
+* Spring
 
 <!-- ABOUT THE PROJECT -->
 ## Getting Started
 - To get a local copy up and running follow these simple example steps.
 
 #### Clone the repository to run the app.
-
-- $ `git clone git@github.com:evabanegacom/Team-067-A-Backend.git`
+- $ `git clone git@github.com/BuildForSDGCohort2/Team-067-A-Backend.git`
 
 
 <!-- CONTACT -->
